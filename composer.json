@@ -1,0 +1,59 @@
+{
+	"name": "quadlayers/wp-orm",
+	"description": "Composer package with autoload for WordPress.",
+	"type": "composer-plugin",
+	"keywords": [
+		"WordPress",
+		"Autoload"
+	],
+	"homepage": "https://quadlayers.com/",
+	"license": "GPL-3.0",
+	"authors": [
+		{
+			"name": "QuadLayers",
+			"email": "noreply@quadlayers.com"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/franmastromarino/wp-orm/issues"
+	},
+	"prefer-stable": true,
+	"minimum-stability": "stable",
+	"config": {
+		"platform": {
+			"php": "7.3.0"
+		},
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"autoload": {
+		"psr-4": {
+			"YourNamespace\\": "src/"
+		}
+	},
+	"require": {
+		"php": ">=7.1.0"
+	},
+	"require-dev": {
+		"composer/composer": "^2.1",
+		"wp-coding-standards/wpcs": "^2.3.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+        "phpcompatibility/phpcompatibility-wp": "^2.1.0",
+		"phpunit/phpunit": "^9.6",
+		"mockery/mockery": "^1.5",
+		"brain/monkey": "^2.6",
+		"10up/wp_mock": "^0.5.0",
+        "squizlabs/php_codesniffer": "*"
+	},
+	"scripts": {
+		"test": "./vendor/bin/phpunit",
+		"start": "composer install && composer dump-autoload",
+		"build": "composer install --no-dev && composer dump-autoload -o --no-dev",
+        "phpcs": "phpcs --standard=PSR12 src/",
+        "phpcbf": "phpcbf --standard=PSR12 src/",
+		"phpcs:report:csv": "./vendor/bin/phpcs --warning-severity=0 --extensions=php --report=csv --report-file=./phpcs_error.csv ./src",
+		"phpcs:report:txt": "./vendor/bin/phpcs --warning-severity=0 --extensions=php --report-file=./phpcs_error.txt ./src",
+		"phpcs:report:autofix": "./vendor/bin/phpcbf ./src"
+	}
+}
