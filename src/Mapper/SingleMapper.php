@@ -10,18 +10,16 @@ class SingleMapper implements SingleMapperInterface
 {
     public function toEntity(SingleDTOInterface $dto): SingleInterface
     {
-        $entity = new Single();
-        $entity->setKey1($dto->getKey1());
-        $entity->setKey2($dto->getKey2());
-
-        return $entity;
+        $properties = [];
+        foreach ($dto->getProperties() as $key => $value) {
+            $properties[$key] = $value;
+        }
+    
+        return new Single($properties);
     }
 
     public function toArray(SingleInterface $single): array
     {
-        return [
-            'key1' => $single->getKey1(),
-            'key2' => $single->getKey2(),
-        ];
+        return $single->getProperties();
     }
 }

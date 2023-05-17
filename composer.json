@@ -29,7 +29,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"YourNamespace\\": "src/"
+			"YourNamespace\\": "src/",
+			"YourNamespace\\Tests\\": "tests/"
 		}
 	},
 	"require": {

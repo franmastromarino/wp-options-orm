@@ -27,6 +27,5 @@ class SingleRepository implements SingleRepositoryInterface
         $data = $this->mapper->toArray($single);
 
         return update_option($single->getKey1(), $data);
-        // update_option('test_single', ['plugin_setting_1' => 'value1']);
     }
 }

@@ -3,6 +3,7 @@
 namespace YourNamespace\Tests\Service;
 
 use PHPUnit\Framework\TestCase;
+use YourNamespace\Tests\TestValues;
 use YourNamespace\Entity\Single;
 use YourNamespace\DTO\SingleDTO;
 use YourNamespace\Service\SingleService;
@@ -24,13 +25,9 @@ class SingleServiceTest extends TestCase
 
     public function testProcess()
     {
-        $dto = new SingleDTO();
-        $dto->setKey1('test_key1');
-        $dto->setKey2('test_key2');
+        $dto = new SingleDTO(TestValues::getTest1());
 
         $entity = new Single();
-        $entity->setKey1('test_key1');
-        $entity->setKey2('test_key2');
 
         $this->mapper
         ->expects($this->once())
