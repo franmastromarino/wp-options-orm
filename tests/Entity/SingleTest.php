@@ -11,7 +11,7 @@ class SingleTest extends TestCase
     public function testGettersAndSetters()
     {
 
-        $test = TestValues::getTest1();
+        $test = TestValues::getValues();
 
         $dto = new Single($test);
 

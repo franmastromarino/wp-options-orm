@@ -25,7 +25,7 @@ class SingleServiceTest extends TestCase
 
     public function testProcess()
     {
-        $dto = new SingleDTO(TestValues::getTest1());
+        $dto = new SingleDTO(TestValues::getValues());
 
         $entity = new Single();
 

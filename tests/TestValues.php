@@ -4,7 +4,7 @@ namespace YourNamespace\Tests;
 
 class TestValues
 {
-    public static function getTest1(): array
+    public static function getValues(): array
     {
         return [
             "key1" => "plugin_setting_1",
@@ -12,11 +12,8 @@ class TestValues
         ];
     }
 
-    public static function getTest2(): array
+    public static function getOptionName(): string
     {
-        return [
-            "key1" => "plugin_setting_2",
-            "key2" => "value2"
-        ];
+        return "option_name_1";
     }
 }

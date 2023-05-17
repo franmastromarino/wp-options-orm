@@ -12,8 +12,8 @@ class SingleMapperTest extends TestCase
 {
     public function testToEntity()
     {
-        $test = TestValues::getTest1();
-        $dto = new SingleDTO(TestValues::getTest1());
+        $test = TestValues::getValues();
+        $dto = new SingleDTO(TestValues::getValues());
         $mapper = new SingleMapper();
 
         $entity = $mapper->toEntity($dto);

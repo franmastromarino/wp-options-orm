@@ -28,29 +28,33 @@ class SingleServiceWordPressIntegrationTest extends TestCase
 
     public function testProcess()
     {
-        $test1 = TestValues::getTest1();
+        $testValues = TestValues::getValues();
+        $testOptionName = TestValues::getOptionName();
         //Mock WordPress functions
         Functions\when('update_option')->alias(
-            function ($option, $value) use ($test1) {
-                if (serialize($test1) === serialize($value)) {
-                    return true;
+            function ($option, $value) use ($testValues, $testOptionName) {
+                if (serialize($testValues) !== serialize($value)) {
+                    fwrite(STDOUT, "testValues => " . json_encode($testValues, true));
+                    return false;
                 }
-                fwrite(STDOUT, "test1 => " . json_encode($test1, true));
-                fwrite(STDOUT, "value => " . json_encode($value, true));
-                return false;
+                if ($testOptionName !== $option) {
+                    fwrite(STDOUT, "option => " . json_encode($option, true));
+                    return false;
+                }
+                return true;
             }
         );
 
         Functions\when('get_option')->justReturn([]);
 
         $mapper = new SingleMapper();
-        $repository = new SingleRepository($mapper);
+        $repository = new SingleRepository($mapper, $testOptionName);
         $service = new SingleService($repository, $mapper);
 
         /**
          * Test 1
          */
-        $dto1 = new SingleDTO($test1);
+        $dto1 = new SingleDTO($testValues);
         $result1 = $service->process($dto1);
         $this->assertTrue($result1);
         /**
