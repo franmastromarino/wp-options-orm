@@ -15,11 +15,14 @@ class SchemaValidator
     {
         foreach ($this->schema['properties'] as $key => $property) {
             if (!isset($data[$key])) {
+                if (isset($property['default'])) {
+                    continue;
+                }
                 return false;
             }
 
             if ($property['type'] === 'object' && isset($property['properties'])) {
-                $validator = new self($property);
+                $validator = new self($property['properties']);
                 if (!$validator->validate($data[$key])) {
                     return false;
                 }
@@ -30,6 +33,27 @@ class SchemaValidator
 
         return true;
     }
+
+
+    // public function validate(array $data): bool
+    // {
+    //     foreach ($this->schema['properties'] as $key => $property) {
+    //         if (!isset($data[$key])) {
+    //             return false;
+    //         }
+
+    //         if ($property['type'] === 'object' && isset($property['properties'])) {
+    //             $validator = new self($property);
+    //             if (!$validator->validate($data[$key])) {
+    //                 return false;
+    //             }
+    //         } elseif (gettype($data[$key]) !== $property['type']) {
+    //             return false;
+    //         }
+    //     }
+
+    //     return true;
+    // }
 
     public function getDefaults(): array
     {

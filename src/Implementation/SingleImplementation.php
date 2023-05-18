@@ -12,13 +12,13 @@ abstract class SingleImplementation implements SingleImplementationInterface
 {
     private static array $instances = [];
 
-    private SingleFactory $factory;
+    private SingleMapper $mapper;
     private SingleRepository $repository;
 
     protected function __construct(string $option_key, array $schema)
     {
-        $this->factory = new SingleFactory($schema);
-        $this->repository = new SingleRepository($this->factory, $option_key);
+        $this->mapper = new SingleMapper(new SingleFactory($schema));
+        $this->repository = new SingleRepository($this->mapper, $option_key);
     }
 
     public static function getInstance(string $option_key, array $schema): self
@@ -37,6 +37,6 @@ abstract class SingleImplementation implements SingleImplementationInterface
 
     public function save(array $data): bool
     {
-        return $this->repository->save($data);
+        return $this->repository->create($data);
     }
 }

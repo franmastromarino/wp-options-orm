@@ -13,10 +13,17 @@ class TestSingleImplementation extends SingleImplementation
 
 class SingleImplementationTest extends TestCase
 {
+    private array $testValue;
+    private array $testSchema;
+    private string $testOptionName;
+    private TestSingleImplementation $testSingleImplementation;
+
     protected function setUp(): void
     {
-        parent::setUp();
-        Monkey\setUp();
+        $this->testValue = TestValues::getValue();
+        $this->testOptionName = TestValues::getOptionName();
+        $this->testSchema = TestValues::getSchema();
+        $this->testSingleImplementation = TestSingleImplementation::getInstance($this->testOptionName, $this->testSchema);
     }
 
     protected function tearDown(): void
@@ -28,29 +35,40 @@ class SingleImplementationTest extends TestCase
     public function testSave()
     {
 
-        $testValue = TestValues::getValue();
-        $testOptionName = TestValues::getOptionName();
-        $testSchema = TestValues::getSchema();
-
         Functions\when('update_option')->alias(
-            function ($option, $value) use ($testValue, $testOptionName) {
-                if (serialize($testValue) !== serialize($value)) {
+            function ($option, $value) {
+                if (serialize($this->testValue) !== serialize($value)) {
                     fwrite(STDOUT, "value => " . json_encode($value, true));
-                    fwrite(STDOUT, "testValue => " . json_encode($testValue, true));
+                    fwrite(STDOUT, "testValue => " . json_encode($this->testValue, true));
                     return false;
                 }
-                if ($testOptionName !== $option) {
+                if ($this->testOptionName !== $option) {
                     fwrite(STDOUT, "option => " . json_encode($option, true));
-                    fwrite(STDOUT, "testOptionName => " . json_encode($testOptionName, true));
+                    fwrite(STDOUT, "this->testOptionName => " . json_encode($this->testOptionName, true));
                     return false;
                 }
                 return true;
             }
         );
 
-        $testSingleImplementation = TestSingleImplementation::getInstance($testOptionName, $testSchema);
-        $result = $testSingleImplementation->save($testValue);
+        $result = $this->testSingleImplementation->save($this->testValue);
 
         $this->assertTrue($result);
+    }
+
+    public function testGet()
+    {
+
+        // When get_option is called, return existingData
+        Functions\when('get_option')->justReturn($this->testValue);
+
+        // Invoke get method
+        $result = $this->testSingleImplementation->get();
+
+        // Ensure the result matches our expectations
+        // key1 should be the same as existing data
+        $this->assertEquals($this->testValue['key1'], $result->getKey1());
+        // key2 should be the default value from the schema
+        $this->assertEquals($this->testValue['key2'], $result->getKey2());
     }
 }

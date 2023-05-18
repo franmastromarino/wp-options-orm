@@ -16,8 +16,6 @@ class SingleMapper implements SingleMapperInterface
 
     public function toEntity(array $data): SingleInterface
     {
-
-
         return $this->factory->create($data);
     }
 

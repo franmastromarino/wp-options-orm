@@ -7,8 +7,8 @@ class TestValues
     public static function getValue(): array
     {
         return [
-            "key1" => "plugin_setting_1",
-            "key2" => "value1"
+            "key1" => "value1",
+            "key2" => "value2"
         ];
     }
 
@@ -24,11 +24,11 @@ class TestValues
             'properties' => [
                 "key1" => [
                     "type" => "string",
-                    "default" => "plugin_setting_1"
+                    "default" => "default_value_1"
                 ],
                 "key2" => [
                     "type" => "string",
-                    "default" => "value1"
+                    "default" => "default_value_2"
                 ]
             ]
         ];

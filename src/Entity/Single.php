@@ -4,7 +4,7 @@ namespace YourNamespace\Entity;
 
 class Single implements SingleInterface
 {
-     private array $properties;
+    private array $properties;
 
     public function __construct(array $data = [])
     {

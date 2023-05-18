@@ -30,6 +30,7 @@ class SingleServiceWordPressIntegrationTest extends TestCase
     {
         $testValue = TestValues::getValue();
         $testOptionName = TestValues::getOptionName();
+        $testSchema = TestValues::getSchema();
         //Mock WordPress functions
         Functions\when('update_option')->alias(
             function ($option, $value) use ($testValue, $testOptionName) {
@@ -47,15 +48,14 @@ class SingleServiceWordPressIntegrationTest extends TestCase
 
         Functions\when('get_option')->justReturn([]);
 
-        $factory = new SingleFactory(TestValues::getSchema());
+        $factory = new SingleFactory($testSchema);
         $mapper = new SingleMapper($factory);
-        $repository = new SingleRepository($factory, $testOptionName);
-        $service = new SingleService($repository, $mapper);
+        $repository = new SingleRepository($mapper, $testOptionName);
 
         /**
          * Test 1
          */
-        $result = $service->process($testValue);
+        $result = $repository->create($testValue);
         $this->assertTrue($result);
         /**
          * Test 2
