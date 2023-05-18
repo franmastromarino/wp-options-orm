@@ -48,7 +48,7 @@
         "squizlabs/php_codesniffer": "*"
 	},
 	"scripts": {
-		"test": "./vendor/bin/phpunit",
+		"test": "./vendor/bin/phpunit --debug",
 		"start": "composer install && composer dump-autoload",
 		"build": "composer install --no-dev && composer dump-autoload -o --no-dev",
         "phpcs": "phpcs --standard=PSR12 src/",

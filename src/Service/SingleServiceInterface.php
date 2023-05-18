@@ -2,9 +2,7 @@
 
 namespace YourNamespace\Service;
 
-use YourNamespace\DTO\SingleDTOInterface;
-
 interface SingleServiceInterface
 {
-    public function process(SingleDTOInterface $single): bool;
+    public function process(array $single): bool;
 }

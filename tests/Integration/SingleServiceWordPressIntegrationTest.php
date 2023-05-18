@@ -10,7 +10,7 @@ use YourNamespace\Tests\TestValues;
 use YourNamespace\Service\SingleService;
 use YourNamespace\Repository\SingleRepository;
 use YourNamespace\Mapper\SingleMapper;
-use YourNamespace\DTO\SingleDTO;
+use YourNamespace\Entity\SingleFactory;
 
 class SingleServiceWordPressIntegrationTest extends TestCase
 {
@@ -28,17 +28,17 @@ class SingleServiceWordPressIntegrationTest extends TestCase
 
     public function testProcess()
     {
-        $testValues = TestValues::getValues();
+        $testValue = TestValues::getValue();
         $testOptionName = TestValues::getOptionName();
         //Mock WordPress functions
         Functions\when('update_option')->alias(
-            function ($option, $value) use ($testValues, $testOptionName) {
-                if (serialize($testValues) !== serialize($value)) {
-                    fwrite(STDOUT, "testValues => " . json_encode($testValues, true));
+            function ($option, $value) use ($testValue, $testOptionName) {
+                if (serialize($testValue) !== serialize($value)) {
+                    fwrite(STDOUT, "testValue => " . json_encode($testValue, true));
                     return false;
                 }
                 if ($testOptionName !== $option) {
-                    fwrite(STDOUT, "option => " . json_encode($option, true));
+                    fwrite(STDOUT, "testOptionName => " . json_encode($option, true));
                     return false;
                 }
                 return true;
@@ -47,16 +47,16 @@ class SingleServiceWordPressIntegrationTest extends TestCase
 
         Functions\when('get_option')->justReturn([]);
 
-        $mapper = new SingleMapper();
-        $repository = new SingleRepository($mapper, $testOptionName);
+        $factory = new SingleFactory(TestValues::getSchema());
+        $mapper = new SingleMapper($factory);
+        $repository = new SingleRepository($factory, $testOptionName);
         $service = new SingleService($repository, $mapper);
 
         /**
          * Test 1
          */
-        $dto1 = new SingleDTO($testValues);
-        $result1 = $service->process($dto1);
-        $this->assertTrue($result1);
+        $result = $service->process($testValue);
+        $this->assertTrue($result);
         /**
          * Test 2
          */

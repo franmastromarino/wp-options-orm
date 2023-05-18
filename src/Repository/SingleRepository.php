@@ -2,29 +2,32 @@
 
 namespace YourNamespace\Repository;
 
+use YourNamespace\Entity\SingleFactory;
 use YourNamespace\Entity\SingleInterface;
-use YourNamespace\Mapper\SingleMapperInterface;
+// use YourNamespace\Mapper\SingleMapper;
 
 class SingleRepository implements SingleRepositoryInterface
 {
-    private SingleMapperInterface $mapper;
+    private SingleFactory $factory;
+    // private SingleMapper $mapper;
     private string $option_key;
 
-    public function __construct(SingleMapperInterface $mapper, string $option_key)
+    public function __construct(SingleFactory $factory, string $option_key)
     {
-        $this->mapper = $mapper;
+        $this->factory = $factory;
+        // $this->mapper = new SingleMapper($this->factory);
         $this->option_key = $option_key;
     }
 
     public function find(): ?SingleInterface
     {
         $data = get_option($this->option_key, null);
-        return $data ? $this->mapper->toEntity($data) : null;
+        return $data ? $this->factory->create($data) : null;
     }
 
-    public function save(SingleInterface $single): bool
+    public function save(array $data): bool
     {
-        $data = $this->mapper->toArray($single);
-        return update_option($this->option_key, $data);
+        $single = $this->factory->create($data);
+        return update_option($this->option_key, $single->getProperties());
     }
 }

@@ -4,25 +4,25 @@ namespace YourNamespace\Tests\Mapper;
 
 use PHPUnit\Framework\TestCase;
 use YourNamespace\Tests\TestValues;
-use YourNamespace\DTO\SingleDTO;
 use YourNamespace\Entity\Single;
+use YourNamespace\Entity\SingleFactory;
 use YourNamespace\Mapper\SingleMapper;
 
 class SingleMapperTest extends TestCase
 {
     public function testToEntity()
     {
-        $test = TestValues::getValues();
-        $dto = new SingleDTO(TestValues::getValues());
-        $mapper = new SingleMapper();
+        $testValue = TestValues::getValue();
+        $testSchema = TestValues::getSchema();
+        
+        $factory = new SingleFactory($testSchema);
+        $mapper = new SingleMapper($factory);
 
-        $entity = $mapper->toEntity($dto);
+        $entity = $mapper->toEntity($testValue);
 
         $this->assertInstanceOf(Single::class, $entity);
 
-        $dto = new Single($test);
-
-        $this->assertEquals($test['key1'], $entity->getKey1());
-        $this->assertEquals($test['key2'], $entity->getKey2());
+        $this->assertEquals($testValue['key1'], $entity->getKey1());
+        $this->assertEquals($testValue['key2'], $entity->getKey2());
     }
 }

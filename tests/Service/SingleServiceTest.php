@@ -5,7 +5,6 @@ namespace YourNamespace\Tests\Service;
 use PHPUnit\Framework\TestCase;
 use YourNamespace\Tests\TestValues;
 use YourNamespace\Entity\Single;
-use YourNamespace\DTO\SingleDTO;
 use YourNamespace\Service\SingleService;
 use YourNamespace\Repository\SingleRepositoryInterface;
 use YourNamespace\Mapper\SingleMapperInterface;
@@ -25,21 +24,22 @@ class SingleServiceTest extends TestCase
 
     public function testProcess()
     {
-        $dto = new SingleDTO(TestValues::getValues());
 
-        $entity = new Single();
+        $testValue = TestValues::getValue();
 
-        $this->mapper
-        ->expects($this->once())
-        ->method('toEntity')
-        ->with($this->equalTo($dto))
-        ->willReturn($entity);
+        $entity = new Single($testValue);
+
+        // $this->mapper
+        // ->expects($this->once())
+        // ->method('toEntity')
+        // ->with($this->equalTo($entity))
+        // ->willReturn($entity);
 
         $this->repository
         ->expects($this->once())
         ->method('save')
-        ->with($entity);
+        ->with($testValue);
 
-        $this->service->process($dto);
+        $this->service->process($testValue);
     }
 }

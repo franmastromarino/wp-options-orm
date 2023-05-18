@@ -11,11 +11,11 @@ class SingleTest extends TestCase
     public function testGettersAndSetters()
     {
 
-        $test = TestValues::getValues();
+        $testValue = TestValues::getValue();
 
-        $dto = new Single($test);
+        $entity = new Single($testValue);
 
-        $this->assertEquals($test['key1'], $dto->getKey1());
-        $this->assertEquals($test['key2'], $dto->getKey2());
+        $this->assertEquals($testValue['key1'], $entity->getKey1());
+        $this->assertEquals($testValue['key2'], $entity->getKey2());
     }
 }

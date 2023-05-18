@@ -2,20 +2,23 @@
 
 namespace YourNamespace\Mapper;
 
-use YourNamespace\DTO\SingleDTOInterface;
 use YourNamespace\Entity\SingleInterface;
-use YourNamespace\Entity\Single;
+use YourNamespace\Entity\SingleFactory;
 
 class SingleMapper implements SingleMapperInterface
 {
-    public function toEntity(SingleDTOInterface $dto): SingleInterface
+    private SingleFactory $factory;
+
+    public function __construct(SingleFactory $factory)
     {
-        $properties = [];
-        foreach ($dto->getProperties() as $key => $value) {
-            $properties[$key] = $value;
-        }
-    
-        return new Single($properties);
+        $this->factory = $factory;
+    }
+
+    public function toEntity(array $data): SingleInterface
+    {
+
+
+        return $this->factory->create($data);
     }
 
     public function toArray(SingleInterface $single): array

@@ -4,15 +4,11 @@ namespace YourNamespace\Entity;
 
 class Single implements SingleInterface
 {
-    private array $properties = ['key1' => 'value1', 'key2' => 'value2'];
+     private array $properties;
 
-    public function __construct(array $properties = [])
+    public function __construct(array $data = [])
     {
-        foreach ($properties as $key => $value) {
-            if (array_key_exists($key, $this->properties)) {
-                $this->properties[$key] = $value;
-            }
-        }
+        $this->properties = $data;
     }
 
     public function __get($key): string
