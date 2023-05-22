@@ -5,25 +5,27 @@ namespace YourNamespace\Tests;
 use PHPUnit\Framework\TestCase;
 use Brain\Monkey\Functions;
 use Brain\Monkey;
-use YourNamespace\Implementation\SingleImplementation;
+use YourNamespace\Builder\SingleRepositoryBuilder;
+use YourNamespace\Repository\SingleRepository;
 
-class TestSingleImplementation extends SingleImplementation
-{
-}
-
-class SingleImplementationTest extends TestCase
+class SingleRepositoryBuilderTest extends TestCase
 {
     private array $testValue;
     private array $testSchema;
     private string $testOptionName;
-    private TestSingleImplementation $testSingleImplementation;
+    private SingleRepository $repository;
 
     protected function setUp(): void
     {
         $this->testValue = TestValues::getValue();
         $this->testOptionName = TestValues::getOptionName();
         $this->testSchema = TestValues::getSchema();
-        $this->testSingleImplementation = TestSingleImplementation::getInstance($this->testOptionName, $this->testSchema);
+
+        $builder = (new SingleRepositoryBuilder())
+        ->setOptionKey($this->testOptionName)
+        ->setSchema($this->testSchema);
+
+        $this->repository = $builder->getRepository();
     }
 
     protected function tearDown(): void
@@ -51,7 +53,7 @@ class SingleImplementationTest extends TestCase
             }
         );
 
-        $result = $this->testSingleImplementation->save($this->testValue);
+        $result = $this->repository->create($this->testValue);
 
         $this->assertTrue($result);
     }
@@ -63,7 +65,7 @@ class SingleImplementationTest extends TestCase
         Functions\when('get_option')->justReturn($this->testValue);
 
         // Invoke get method
-        $result = $this->testSingleImplementation->get();
+        $result = $this->repository->find();
 
         // Ensure the result matches our expectations
         // key1 should be the same as existing data
