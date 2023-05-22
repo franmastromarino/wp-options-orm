@@ -6,11 +6,11 @@ use PHPUnit\Framework\TestCase;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery;
-use YourNamespace\Tests\TestValues;
-use YourNamespace\Service\SingleService;
-use YourNamespace\Repository\SingleRepository;
-use YourNamespace\Mapper\SingleMapper;
-use YourNamespace\Entity\SingleFactory;
+use QuadLayers\WP_Orm\Tests\TestValues;
+use QuadLayers\WP_Orm\Service\SingleService;
+use QuadLayers\WP_Orm\Repository\SingleRepository;
+use QuadLayers\WP_Orm\Mapper\SingleMapper;
+use QuadLayers\WP_Orm\Entity\SingleFactory;
 
 class SingleServiceWordPressIntegrationTest extends TestCase
 {

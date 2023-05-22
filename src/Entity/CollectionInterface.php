@@ -1,6 +1,6 @@
 <?php
 
-namespace YourNamespace\Entity;
+namespace QuadLayers\WP_Orm\Entity;
 
 interface CollectionInterface
 {

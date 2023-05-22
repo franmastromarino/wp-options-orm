@@ -1,9 +1,9 @@
 <?php
 
-namespace YourNamespace\Mapper;
+namespace QuadLayers\WP_Orm\Mapper;
 
-use YourNamespace\Entity\SingleInterface;
-use YourNamespace\Entity\SingleFactory;
+use QuadLayers\WP_Orm\Entity\SingleInterface;
+use QuadLayers\WP_Orm\Entity\SingleFactory;
 
 class SingleMapper implements SingleMapperInterface
 {

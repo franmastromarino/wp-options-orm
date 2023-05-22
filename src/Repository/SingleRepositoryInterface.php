@@ -1,8 +1,8 @@
 <?php
 
-namespace YourNamespace\Repository;
+namespace QuadLayers\WP_Orm\Repository;
 
-use YourNamespace\Entity\SingleInterface;
+use QuadLayers\WP_Orm\Entity\SingleInterface;
 
 interface SingleRepositoryInterface
 {

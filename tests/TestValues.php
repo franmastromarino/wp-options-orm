@@ -1,6 +1,6 @@
 <?php
 
-namespace YourNamespace\Tests;
+namespace QuadLayers\WP_Orm\Tests;
 
 class TestValues
 {

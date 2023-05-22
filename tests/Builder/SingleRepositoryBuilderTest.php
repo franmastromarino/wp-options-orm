@@ -1,12 +1,12 @@
 <?php
 
-namespace YourNamespace\Tests;
+namespace QuadLayers\WP_Orm\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Brain\Monkey\Functions;
 use Brain\Monkey;
-use YourNamespace\Builder\SingleRepositoryBuilder;
-use YourNamespace\Repository\SingleRepository;
+use QuadLayers\WP_Orm\Builder\SingleRepositoryBuilder;
+use QuadLayers\WP_Orm\Repository\SingleRepository;
 
 class SingleRepositoryBuilderTest extends TestCase
 {

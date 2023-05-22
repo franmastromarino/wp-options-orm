@@ -1,9 +1,9 @@
 <?php
 
-namespace YourNamespace\Repository;
+namespace QuadLayers\WP_Orm\Repository;
 
-use YourNamespace\Entity\SingleInterface;
-use YourNamespace\Mapper\SingleMapperInterface;
+use QuadLayers\WP_Orm\Entity\SingleInterface;
+use QuadLayers\WP_Orm\Mapper\SingleMapperInterface;
 
 class SingleRepository implements SingleRepositoryInterface
 {

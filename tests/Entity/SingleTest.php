@@ -1,10 +1,10 @@
 <?php
 
-namespace YourNamespace\Tests\Entity;
+namespace QuadLayers\WP_Orm\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
-use YourNamespace\Entity\Single;
-use YourNamespace\Tests\TestValues;
+use QuadLayers\WP_Orm\Entity\Single;
+use QuadLayers\WP_Orm\Tests\TestValues;
 
 class SingleTest extends TestCase
 {

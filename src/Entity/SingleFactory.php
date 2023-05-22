@@ -1,9 +1,9 @@
 <?php
 
-namespace YourNamespace\Entity;
+namespace QuadLayers\WP_Orm\Entity;
 
-use YourNamespace\Validator\SchemaValidator;
-use YourNamespace\Entity\Single;
+use QuadLayers\WP_Orm\Validator\SchemaValidator;
+use QuadLayers\WP_Orm\Entity\Single;
 
 class SingleFactory
 {

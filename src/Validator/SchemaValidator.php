@@ -1,6 +1,6 @@
 <?php
 
-namespace YourNamespace\Validator;
+namespace QuadLayers\WP_Orm\Validator;
 
 class SchemaValidator
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace YourNamespace\Tests\Repository;
+namespace QuadLayers\WP_Orm\Tests\Repository;
 
 use PHPUnit\Framework\TestCase;
-use YourNamespace\Tests\TestValues;
-use YourNamespace\Entity\Single;
-use YourNamespace\Repository\SingleRepositoryInterface;
+use QuadLayers\WP_Orm\Tests\TestValues;
+use QuadLayers\WP_Orm\Entity\Single;
+use QuadLayers\WP_Orm\Repository\SingleRepositoryInterface;
 
 class SingleRepositoryTest extends TestCase
 {

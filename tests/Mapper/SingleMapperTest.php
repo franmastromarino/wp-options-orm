@@ -1,12 +1,12 @@
 <?php
 
-namespace YourNamespace\Tests\Mapper;
+namespace QuadLayers\WP_Orm\Tests\Mapper;
 
 use PHPUnit\Framework\TestCase;
-use YourNamespace\Tests\TestValues;
-use YourNamespace\Entity\Single;
-use YourNamespace\Entity\SingleFactory;
-use YourNamespace\Mapper\SingleMapper;
+use QuadLayers\WP_Orm\Tests\TestValues;
+use QuadLayers\WP_Orm\Entity\Single;
+use QuadLayers\WP_Orm\Entity\SingleFactory;
+use QuadLayers\WP_Orm\Mapper\SingleMapper;
 
 class SingleMapperTest extends TestCase
 {

@@ -1,7 +1,7 @@
 {
-	"name": "quadlayers/wp-orm",
-	"description": "Composer package with autoload for WordPress.",
-	"type": "composer-plugin",
+	"name": "franmastromarino/wp-orm",
+    "description": "A package to help developers create custom WordPress entities in their own plugins.",
+	"type": "library",
 	"keywords": [
 		"WordPress",
 		"Autoload"
@@ -29,8 +29,13 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"YourNamespace\\": "src/",
-			"YourNamespace\\Tests\\": "tests/"
+			"QuadLayers\\WP_Orm\\": "src/",
+			"QuadLayers\\WP_Orm\\Tests\\": "tests/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"QuadLayers\\WP_Orm\\Tests\\": "tests/"
 		}
 	},
 	"require": {

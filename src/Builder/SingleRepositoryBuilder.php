@@ -1,10 +1,10 @@
 <?php
 
-namespace YourNamespace\Builder;
+namespace QuadLayers\WP_Orm\Builder;
 
-use YourNamespace\Entity\SingleFactory;
-use YourNamespace\Mapper\SingleMapper;
-use YourNamespace\Repository\SingleRepository;
+use QuadLayers\WP_Orm\Entity\SingleFactory;
+use QuadLayers\WP_Orm\Mapper\SingleMapper;
+use QuadLayers\WP_Orm\Repository\SingleRepository;
 
 class SingleRepositoryBuilder
 {
