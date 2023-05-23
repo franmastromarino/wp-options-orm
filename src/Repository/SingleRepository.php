@@ -8,13 +8,13 @@ use QuadLayers\WP_Orm\Mapper\SingleMapperInterface;
 class SingleRepository implements SingleRepositoryInterface
 {
     private SingleMapperInterface $mapper;
-    private string $option_key;
+    private string $optionKey;
     private ?SingleInterface $cache = null;
 
-    public function __construct(SingleMapperInterface $mapper, string $option_key)
+    public function __construct(SingleMapperInterface $mapper, string $optionKey)
     {
         $this->mapper = $mapper;
-        $this->option_key = $option_key;
+        $this->optionKey = $optionKey;
     }
 
     public function find(): ?SingleInterface
@@ -23,7 +23,7 @@ class SingleRepository implements SingleRepositoryInterface
             return $this->cache;
         }
 
-        $data = get_option($this->option_key, null);
+        $data = get_option($this->optionKey, null);
         $this->cache = $data ? $this->mapper->toEntity($data) : null;
         return $this->cache;
     }
@@ -31,7 +31,7 @@ class SingleRepository implements SingleRepositoryInterface
     public function save(SingleInterface $entity): bool
     {
         $this->cache = $entity;
-        return update_option($this->option_key, $this->mapper->toArray($entity));
+        return update_option($this->optionKey, $this->mapper->toArray($entity));
     }
 
     public function update(array $data): bool
@@ -49,12 +49,17 @@ class SingleRepository implements SingleRepositoryInterface
     public function delete(): bool
     {
         $this->cache = null;
-        return delete_option($this->option_key);
+        return delete_option($this->optionKey);
     }
 
     public function create(array $data): bool
     {
         $entity = $this->mapper->toEntity($data);
         return $this->save($entity);
+    }
+
+    public function getTable(): string
+    {
+        return $this->optionKey;
     }
 }

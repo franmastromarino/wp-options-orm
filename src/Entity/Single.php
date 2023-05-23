@@ -5,10 +5,12 @@ namespace QuadLayers\WP_Orm\Entity;
 class Single implements SingleInterface
 {
     private array $properties;
+    private array $defaults;
 
-    public function __construct(array $data = [])
+    public function __construct(array $data = [], array $defaults = [])
     {
         $this->properties = $data;
+        $this->defaults = $defaults;
     }
 
     public function __get($key): string
@@ -51,5 +53,10 @@ class Single implements SingleInterface
     public function getProperties(): array
     {
         return $this->properties;
+    }
+
+    public function getDefaults(): array
+    {
+        return $this->defaults;
     }
 }

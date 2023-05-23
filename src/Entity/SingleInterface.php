@@ -8,4 +8,5 @@ interface SingleInterface
     public function __get($key);
     public function __set($key, $value);
     public function getProperties(): array;
+    public function getDefaults(): array;
 }

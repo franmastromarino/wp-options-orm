@@ -11,4 +11,5 @@ interface SingleRepositoryInterface
     public function update(array $data): bool;
     public function delete(): bool;
     public function create(array $data): bool;
+    public function getTable(): string;
 }

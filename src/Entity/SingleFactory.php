@@ -16,13 +16,12 @@ class SingleFactory
 
     public function create(array $data): Single
     {
-        if (!$this->validator->validate($data)) {
-            throw new \InvalidArgumentException("Data doesn't match the schema.");
-        }
+
+        $data = $this->validator->getSanitizedData($data);
 
         $defaults = $this->validator->getDefaults();
         $processedData = array_merge($defaults, $data);
 
-        return new Single($processedData);
+        return new Single($processedData, $defaults);
     }
 }
