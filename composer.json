@@ -18,7 +18,7 @@
 		"issues": "https://github.com/franmastromarino/wp-orm/issues"
 	},
 	"prefer-stable": true,
-	"minimum-stability": "stable",
+	"minimum-stability": "dev",
 	"config": {
 		"platform": {
 			"php": "7.3.0"
@@ -29,8 +29,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"QuadLayers\\WP_Orm\\": "src/",
-			"QuadLayers\\WP_Orm\\Tests\\": "tests/"
+			"QuadLayers\\WP_Orm\\": "src/"
 		}
 	},
 	"autoload-dev": {
