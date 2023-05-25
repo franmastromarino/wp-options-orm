@@ -8,8 +8,21 @@ use QuadLayers\WP_Orm\Repository\SingleRepository;
 
 class SingleRepositoryBuilder
 {
+    private string $table;
+    private string $group;
     private array $schema;
-    private string $optionKey;
+
+    public function setTable(string $table): self
+    {
+        $this->table = $table;
+        return $this;
+    }
+
+    public function setGroup(string $group): self
+    {
+        $this->group = $group;
+        return $this;
+    }
 
     public function setSchema(array $schema): self
     {
@@ -17,16 +30,10 @@ class SingleRepositoryBuilder
         return $this;
     }
 
-    public function setOptionKey(string $optionKey): self
-    {
-        $this->optionKey = $optionKey;
-        return $this;
-    }
-
     public function getRepository(): SingleRepository
     {
         $factory = new SingleFactory($this->schema);
         $mapper = new SingleMapper($factory);
-        return new SingleRepository($mapper, $this->optionKey);
+        return new SingleRepository($mapper, $this->table);
     }
 }

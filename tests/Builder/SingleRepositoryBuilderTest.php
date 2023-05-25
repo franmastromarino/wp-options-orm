@@ -12,17 +12,17 @@ class SingleRepositoryBuilderTest extends TestCase
 {
     private array $testValue;
     private array $testSchema;
-    private string $testOptionName;
+    private string $testTable;
     private SingleRepository $repository;
 
     protected function setUp(): void
     {
         $this->testValue = TestValues::getValue();
-        $this->testOptionName = TestValues::getOptionName();
+        $this->testTable = TestValues::getOptionName();
         $this->testSchema = TestValues::getSchema();
 
         $builder = (new SingleRepositoryBuilder())
-        ->setOptionKey($this->testOptionName)
+        ->setTable($this->testTable)
         ->setSchema($this->testSchema);
 
         $this->repository = $builder->getRepository();
@@ -44,9 +44,9 @@ class SingleRepositoryBuilderTest extends TestCase
                     fwrite(STDOUT, "testValue => " . json_encode($this->testValue, true));
                     return false;
                 }
-                if ($this->testOptionName !== $option) {
+                if ($this->testTable !== $option) {
                     fwrite(STDOUT, "option => " . json_encode($option, true));
-                    fwrite(STDOUT, "this->testOptionName => " . json_encode($this->testOptionName, true));
+                    fwrite(STDOUT, "this->testTable => " . json_encode($this->testTable, true));
                     return false;
                 }
                 return true;
