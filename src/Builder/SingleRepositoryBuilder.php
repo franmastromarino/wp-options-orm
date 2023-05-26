@@ -10,7 +10,7 @@ class SingleRepositoryBuilder
 {
     private string $table;
     private string $group;
-    private array $schema;
+    private string $entityClass;
 
     public function setTable(string $table): self
     {
@@ -24,15 +24,19 @@ class SingleRepositoryBuilder
         return $this;
     }
 
-    public function setSchema(array $schema): self
+    public function setEntity(string $entityClass): self
     {
-        $this->schema = $schema;
+        if (!class_exists($entityClass)) {
+            throw new \InvalidArgumentException("Class '{$entityClass}' does not exist.");
+        }
+
+        $this->entityClass = $entityClass;
         return $this;
     }
 
     public function getRepository(): SingleRepository
     {
-        $factory = new SingleFactory($this->schema);
+        $factory = new SingleFactory($this->entityClass);
         $mapper = new SingleMapper($factory);
         return new SingleRepository($mapper, $this->table);
     }

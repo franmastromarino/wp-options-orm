@@ -7,16 +7,26 @@ class Single implements SingleInterface
     private array $properties;
     private array $defaults;
 
-    public function __construct(array $data = [], array $defaults = [])
+    public function __construct(array $data = [])
     {
-        $this->properties = $data;
-        $this->defaults = $defaults;
+        // Initialize defaults with current values of properties
+        foreach (get_object_vars($this) as $property => $value) {
+            $this->defaults[$property] = $value;
+        }
+
+        // Set properties with data
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
     }
+
 
     public function __get($key): string
     {
-        if (array_key_exists($key, $this->properties)) {
-            return $this->properties[$key];
+        if (property_exists($this, $key)) {
+            return $this->$key;
         }
 
         throw new \InvalidArgumentException("Property '{$key}' does not exist.");
@@ -24,11 +34,11 @@ class Single implements SingleInterface
 
     public function __set($key, $value): void
     {
-        if (!is_string($value)) {
-            throw new \InvalidArgumentException("Value must be a string.");
+        if (property_exists($this, $key)) {
+            $this->$key = $value;
+        } else {
+            throw new \InvalidArgumentException("Property '{$key}' does not exist.");
         }
-
-        $this->properties[$key] = $value;
     }
 
     /**
@@ -52,7 +62,14 @@ class Single implements SingleInterface
 
     public function getProperties(): array
     {
-        return $this->properties;
+        $reflect = new \ReflectionClass($this);
+        $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
+        $properties = [];
+        foreach ($props as $prop) {
+            $propName = $prop->getName();
+            $properties[$propName] = $this->$propName;
+        }
+        return $properties;
     }
 
     public function getDefaults(): array

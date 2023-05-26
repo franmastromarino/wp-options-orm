@@ -11,19 +11,20 @@ use QuadLayers\WP_Orm\Repository\SingleRepository;
 class SingleRepositoryBuilderTest extends TestCase
 {
     private array $testValue;
-    private array $testSchema;
-    private string $testTable;
+    private string $table;
     private SingleRepository $repository;
 
     protected function setUp(): void
     {
-        $this->testValue = TestValues::getValue();
-        $this->testTable = TestValues::getOptionName();
-        $this->testSchema = TestValues::getSchema();
+
+        $this->table = 'settings';
+        $settings = new Settings();
+
+        $this->testValue = $settings->getDefaults();
 
         $builder = (new SingleRepositoryBuilder())
-        ->setTable($this->testTable)
-        ->setSchema($this->testSchema);
+        ->setTable($this->table)
+        ->setEntity('\QuadLayers\WP_Orm\Tests\Settings');
 
         $this->repository = $builder->getRepository();
     }
@@ -40,13 +41,13 @@ class SingleRepositoryBuilderTest extends TestCase
         Functions\when('update_option')->alias(
             function ($option, $value) {
                 if (serialize($this->testValue) !== serialize($value)) {
-                    fwrite(STDOUT, "value => " . json_encode($value, true));
                     fwrite(STDOUT, "testValue => " . json_encode($this->testValue, true));
+                    fwrite(STDOUT, "value => " . json_encode($value, true));
                     return false;
                 }
-                if ($this->testTable !== $option) {
+                if ($this->table !== $option) {
                     fwrite(STDOUT, "option => " . json_encode($option, true));
-                    fwrite(STDOUT, "this->testTable => " . json_encode($this->testTable, true));
+                    fwrite(STDOUT, "table => " . json_encode($this->table, true));
                     return false;
                 }
                 return true;
