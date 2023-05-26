@@ -31,7 +31,8 @@ class SingleRepository implements SingleRepositoryInterface
     public function save(SingleInterface $entity): bool
     {
         $this->cache = $entity;
-        return update_option($this->table, $this->mapper->toArray($entity));
+        $data = $this->mapper->toArray($entity);
+        return update_option($this->table, $data);
     }
 
     public function update(array $data): bool

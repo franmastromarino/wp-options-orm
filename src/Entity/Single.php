@@ -2,7 +2,7 @@
 
 namespace QuadLayers\WP_Orm\Entity;
 
-class Single implements SingleInterface
+abstract class Single implements SingleInterface
 {
     private array $defaults;
 
@@ -13,12 +13,14 @@ class Single implements SingleInterface
             $this->defaults[$property] = $value;
         }
 
-        // Set properties with data
-        foreach ($data as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
-            }
-        }
+        // // Set properties with data
+        // foreach ($data as $key => $value) {
+        //     if (property_exists($this, $key)) {
+        //         //error_log('key: ' . json_encode($key, JSON_PRETTY_PRINT));
+        //         //error_log('value: ' . json_encode($value, JSON_PRETTY_PRINT));
+        //         $this->$key = $value;
+        //     }
+        // }
     }
 
 
