@@ -4,7 +4,6 @@ namespace QuadLayers\WP_Orm\Entity;
 
 class Single implements SingleInterface
 {
-    private array $properties;
     private array $defaults;
 
     public function __construct(array $data = [])

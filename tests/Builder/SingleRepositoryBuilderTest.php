@@ -11,6 +11,7 @@ use QuadLayers\WP_Orm\Repository\SingleRepository;
 class SingleRepositoryBuilderTest extends TestCase
 {
     private array $testValue;
+    private array $testDefaults;
     private string $table;
     private SingleRepository $repository;
 
@@ -18,25 +19,23 @@ class SingleRepositoryBuilderTest extends TestCase
     {
 
         $this->table = 'settings';
-        $settings = new Settings();
+        // $settings = new Settings();
 
-        $this->testValue = $settings->getDefaults();
+        $this->testDefaults = [
+            'key1' => 'default_value_1',
+            'key2' => 'default_value_2'
+        ];
+
+        $this->testValue = [
+            'key1' => 'value1',
+            'key2' => 'value2',
+        ];
 
         $builder = (new SingleRepositoryBuilder())
         ->setTable($this->table)
         ->setEntity('\QuadLayers\WP_Orm\Tests\Settings');
 
         $this->repository = $builder->getRepository();
-    }
-
-    protected function tearDown(): void
-    {
-        Monkey\tearDown();
-        parent::tearDown();
-    }
-
-    public function testSave()
-    {
 
         Functions\when('update_option')->alias(
             function ($option, $value) {
@@ -54,6 +53,19 @@ class SingleRepositoryBuilderTest extends TestCase
             }
         );
 
+        // When get_option is called, return existingData
+        Functions\when('get_option')->justReturn($this->testValue);
+    }
+
+    protected function tearDown(): void
+    {
+        Monkey\tearDown();
+        parent::tearDown();
+    }
+
+    public function testSave()
+    {
+
         $result = $this->repository->create($this->testValue);
 
         $this->assertTrue($result);
@@ -61,10 +73,6 @@ class SingleRepositoryBuilderTest extends TestCase
 
     public function testGet()
     {
-
-        // When get_option is called, return existingData
-        Functions\when('get_option')->justReturn($this->testValue);
-
         // Invoke get method
         $result = $this->repository->find();
 
@@ -73,5 +81,17 @@ class SingleRepositoryBuilderTest extends TestCase
         $this->assertEquals($this->testValue['key1'], $result->getKey1());
         // key2 should be the default value from the schema
         $this->assertEquals($this->testValue['key2'], $result->getKey2());
+    }
+
+    public function testDefaults()
+    {
+
+        $result = $this->repository->create($this->testValue);
+
+        // Ensure the result matches our expectations
+        // key1 should be the same as existing data
+        $this->assertEquals($this->testDefaults['key1'], 'default_value_1');
+        // key2 should be the default value from the schema
+        $this->assertEquals($this->testDefaults['key2'], 'default_value_2');
     }
 }
