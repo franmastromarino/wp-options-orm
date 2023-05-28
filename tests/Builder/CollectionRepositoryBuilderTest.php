@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Brain\Monkey\Functions;
 use Brain\Monkey;
 use QuadLayers\WP_Orm\Builder\CollectionRepositoryBuilder;
-use QuadLayers\WP_Orm\Entity\CollectionFactory;
+use QuadLayers\WP_Orm\Factory\CollectionFactory;
 use QuadLayers\WP_Orm\Repository\CollectionRepository;
 
 class CollectionRepositoryBuilderTest extends TestCase
@@ -52,7 +52,7 @@ class CollectionRepositoryBuilderTest extends TestCase
 
         $builder = (new CollectionRepositoryBuilder())
             ->setTable($this->table)
-            ->setEntity('\QuadLayers\WP_Orm\Tests\SettingsCollection')
+            ->setEntity('\QuadLayers\WP_Orm\Tests\CollectionEntityTest')
             ->setPrimaryKey('id');
 
         $this->repository = $builder->getRepository();
@@ -84,6 +84,7 @@ class CollectionRepositoryBuilderTest extends TestCase
 
         foreach ($this->testInput as $index => $data) {
             $entity = $this->repository->create($data);
+
             $this->assertEquals($entity->getProperties(), [
                 'id' => $index,
                 'key1' => $data['key1'],
@@ -99,7 +100,7 @@ class CollectionRepositoryBuilderTest extends TestCase
 
         $this->assertEquals($results, array_map(
             function ($item) {
-                $factory = new CollectionFactory('\QuadLayers\WP_Orm\Tests\SettingsCollection');
+                $factory = new CollectionFactory('\QuadLayers\WP_Orm\Tests\CollectionEntityTest');
                 return $factory->create($item);
             },
             $this->testOutput
@@ -139,5 +140,33 @@ class CollectionRepositoryBuilderTest extends TestCase
         $result = $this->repository->delete(1);
 
         $this->assertTrue($result);
+    }
+
+    public function testDefaults()
+    {
+        $results = $this->repository->findAll();
+        foreach ($results as $index => $entity) {
+            $defaults = $entity->getDefaults();
+            $schema = $entity->getSchema();
+            $this->assertEquals($defaults, [
+                'id' => 0,
+                'key1' => 'default_value_1',
+                'key2' =>  'default_value_2',
+            ]);
+            $this->assertEquals($schema, [
+                "id" => [
+                    "type" => "integer",
+                    "default" => 0,
+                ],
+                "key1" => [
+                    "type" => "string",
+                    "default" => "default_value_1",
+                ],
+                "key2" => [
+                    "type" => "string",
+                    "default" => "default_value_2",
+                ],
+            ]);
+        }
     }
 }

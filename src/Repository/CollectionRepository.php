@@ -2,7 +2,7 @@
 
 namespace QuadLayers\WP_Orm\Repository;
 
-use QuadLayers\WP_Orm\Entity\SingleInterface;
+use QuadLayers\WP_Orm\Entity\EntityInterface;
 use QuadLayers\WP_Orm\Mapper\CollectionMapperInterface;
 use QuadLayers\WP_Orm\Entity\Collection;
 
@@ -23,7 +23,7 @@ class CollectionRepository implements CollectionRepositoryInterface
         $this->primaryKey = $primaryKey;
     }
 
-    private function getPrimaryKeyValue(SingleInterface $entity)
+    private function getPrimaryKeyValue(EntityInterface $entity)
     {
         $primaryKey = $this->primaryKey;
 
@@ -91,24 +91,24 @@ class CollectionRepository implements CollectionRepositoryInterface
         return delete_option($this->table);
     }
 
-    public function find($primaryKeyValue): ?SingleInterface
+    public function find($primaryKeyValue): ?EntityInterface
     {
         $index = $this->getEntityIndex($primaryKeyValue);
 
         if ($index === null) {
-            return false;
+            return null;
         }
 
         $collection = $this->findAll();
 
         if (!isset($collection[$index])) {
-            return false;
+            return null;
         }
 
         return $collection[$index];
     }
 
-    public function create(array $data): ?SingleInterface
+    public function create(array $data): ?EntityInterface
     {
 
         if (!isset($data[$this->primaryKey])) {
@@ -122,7 +122,7 @@ class CollectionRepository implements CollectionRepositoryInterface
         $found = $this->getEntityIndex($primaryKeyValue);
 
         if ($found !== null) {
-            return false;
+            return null;
         }
 
         // Get the collection
@@ -132,26 +132,26 @@ class CollectionRepository implements CollectionRepositoryInterface
         array_push($collection, $entity);
 
         if (!$this->saveAll($collection)) {
-            return false;
+            return null;
         }
 
         // Save the updated collection
         return $entity;
     }
 
-    public function update($primaryKeyValue, array $data): ?SingleInterface
+    public function update($primaryKeyValue, array $data): ?EntityInterface
     {
         $index = $this->getEntityIndex($primaryKeyValue);
 
         if ($index === null) {
-            return false;
+            return null;
         }
 
         $collection = $this->findAll();
 
 
         if (!isset($collection[$index])) {
-            return false;
+            return null;
         }
 
         $entity = $collection[$index];

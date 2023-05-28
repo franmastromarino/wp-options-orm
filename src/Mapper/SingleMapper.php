@@ -2,8 +2,8 @@
 
 namespace QuadLayers\WP_Orm\Mapper;
 
-use QuadLayers\WP_Orm\Entity\SingleInterface;
-use QuadLayers\WP_Orm\Entity\SingleFactory;
+use QuadLayers\WP_Orm\Entity\EntityInterface;
+use QuadLayers\WP_Orm\Factory\SingleFactory;
 
 class SingleMapper implements SingleMapperInterface
 {
@@ -14,12 +14,12 @@ class SingleMapper implements SingleMapperInterface
         $this->factory = $factory;
     }
 
-    public function toEntity(array $data): SingleInterface
+    public function toEntity(array $data): EntityInterface
     {
         return $this->factory->create($data);
     }
 
-    public function toArray(SingleInterface $single): array
+    public function toArray(EntityInterface $single): array
     {
         return $single->getProperties();
     }

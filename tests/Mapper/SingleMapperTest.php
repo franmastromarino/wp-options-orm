@@ -3,26 +3,27 @@
 namespace QuadLayers\WP_Orm\Tests\Mapper;
 
 use PHPUnit\Framework\TestCase;
-use QuadLayers\WP_Orm\Entity\Single;
-use QuadLayers\WP_Orm\Entity\SingleFactory;
+use QuadLayers\WP_Orm\Entity\SingleEntity;
+use QuadLayers\WP_Orm\Entity\EntityInterface;
+use QuadLayers\WP_Orm\Factory\SingleFactory;
 use QuadLayers\WP_Orm\Mapper\SingleMapper;
-use QuadLayers\WP_Orm\Tests\Settings;
+use QuadLayers\WP_Orm\Tests\SingleEntityTest;
 
 class SingleMapperTest extends TestCase
 {
     private array $testValue;
-    private Single $entity;
+    private EntityInterface $entity;
     private SingleFactory $factory;
     private SingleMapper $mapper;
 
     protected function setUp(): void
     {
 
-        $settings = new Settings();
+        $settings = new SingleEntityTest();
 
         $this->testValue = $settings->getDefaults();
 
-        $this->factory = new SingleFactory('\QuadLayers\WP_Orm\Tests\Settings');
+        $this->factory = new SingleFactory('\QuadLayers\WP_Orm\Tests\SingleEntityTest');
         $this->mapper = new SingleMapper($this->factory);
         $this->entity = $this->mapper->toEntity($this->testValue);
     }
@@ -32,7 +33,7 @@ class SingleMapperTest extends TestCase
 
         $entity = $this->mapper->toEntity($this->testValue);
 
-        $this->assertInstanceOf(Single::class, $entity);
+        $this->assertInstanceOf(SingleEntity::class, $entity);
         $this->assertEquals($this->testValue['key1'], $entity->getKey1());
         $this->assertEquals($this->testValue['key2'], $entity->getKey2());
     }

@@ -19,7 +19,7 @@ class SingleRepositoryBuilderTest extends TestCase
     {
 
         $this->table = 'settings';
-        // $settings = new Settings();
+        // $settings = new SingleEntity();
 
         $this->testDefaults = [
             'key1' => 'default_value_1',
@@ -33,7 +33,7 @@ class SingleRepositoryBuilderTest extends TestCase
 
         $builder = (new SingleRepositoryBuilder())
         ->setTable($this->table)
-        ->setEntity('\QuadLayers\WP_Orm\Tests\Settings');
+        ->setEntity('\QuadLayers\WP_Orm\Tests\SingleEntityTest');
 
         $this->repository = $builder->getRepository();
 

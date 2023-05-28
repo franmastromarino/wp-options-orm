@@ -3,14 +3,14 @@
 namespace QuadLayers\WP_Orm\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
-use QuadLayers\WP_Orm\Tests\Settings;
+use QuadLayers\WP_Orm\Tests\SingleEntityTest;
 
 class SingleTest extends TestCase
 {
     public function testGettersAndSetters()
     {
 
-        $settings = new Settings();
+        $settings = new SingleEntityTest();
 
         $testValue = $settings->getDefaults();
 

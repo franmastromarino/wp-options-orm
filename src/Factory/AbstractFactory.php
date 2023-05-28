@@ -1,11 +1,10 @@
 <?php
 
-namespace QuadLayers\WP_Orm\Entity;
+namespace QuadLayers\WP_Orm\Factory;
 
-use QuadLayers\WP_Orm\Validator\SchemaValidator;
-use QuadLayers\WP_Orm\Entity\Single;
+use QuadLayers\WP_Orm\Entity\EntityInterface;
 
-class SingleFactory
+abstract class AbstractFactory
 {
     private string $entityClass;
 
@@ -14,7 +13,7 @@ class SingleFactory
         $this->entityClass = $entityClass;
     }
 
-    public function create(array $data): Single
+    public function create(array $data): EntityInterface
     {
         // Create a new instance of the entity
         $entity = new $this->entityClass();

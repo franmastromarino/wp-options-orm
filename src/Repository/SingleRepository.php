@@ -2,14 +2,14 @@
 
 namespace QuadLayers\WP_Orm\Repository;
 
-use QuadLayers\WP_Orm\Entity\SingleInterface;
+use QuadLayers\WP_Orm\Entity\EntityInterface;
 use QuadLayers\WP_Orm\Mapper\SingleMapperInterface;
 
 class SingleRepository implements SingleRepositoryInterface
 {
     private SingleMapperInterface $mapper;
     private string $table;
-    private ?SingleInterface $cache = null;
+    private ?EntityInterface $cache = null;
 
     public function __construct(SingleMapperInterface $mapper, string $table)
     {
@@ -17,7 +17,7 @@ class SingleRepository implements SingleRepositoryInterface
         $this->table = $table;
     }
 
-    public function find(): ?SingleInterface
+    public function find(): ?EntityInterface
     {
         if ($this->cache !== null) {
             return $this->cache;
@@ -28,7 +28,7 @@ class SingleRepository implements SingleRepositoryInterface
         return $this->cache;
     }
 
-    public function save(SingleInterface $entity): bool
+    public function save(EntityInterface $entity): bool
     {
         $this->cache = $entity;
         $data = $this->mapper->toArray($entity);

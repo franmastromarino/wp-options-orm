@@ -4,7 +4,7 @@ namespace QuadLayers\WP_Orm\Tests\Repository;
 
 use PHPUnit\Framework\TestCase;
 use QuadLayers\WP_Orm\Repository\SingleRepositoryInterface;
-use QuadLayers\WP_Orm\Tests\Settings;
+use QuadLayers\WP_Orm\Tests\SingleEntityTest;
 
 class SingleRepositoryTest extends TestCase
 {
@@ -18,7 +18,7 @@ class SingleRepositoryTest extends TestCase
     public function testSave()
     {
 
-        $settings = new Settings();
+        $settings = new SingleEntityTest();
 
         $testValue = $settings->getDefaults();
 
@@ -34,9 +34,7 @@ class SingleRepositoryTest extends TestCase
     public function testFind()
     {
 
-        $settings = new Settings();
-
-        $testValue = $settings->getDefaults();
+        $settings = new SingleEntityTest();
 
         $this->repository
         ->expects($this->once())

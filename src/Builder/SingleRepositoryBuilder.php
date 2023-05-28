@@ -2,7 +2,7 @@
 
 namespace QuadLayers\WP_Orm\Builder;
 
-use QuadLayers\WP_Orm\Entity\SingleFactory;
+use QuadLayers\WP_Orm\Factory\SingleFactory;
 use QuadLayers\WP_Orm\Mapper\SingleMapper;
 use QuadLayers\WP_Orm\Repository\SingleRepository;
 

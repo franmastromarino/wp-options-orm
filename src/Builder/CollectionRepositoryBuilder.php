@@ -2,7 +2,7 @@
 
 namespace QuadLayers\WP_Orm\Builder;
 
-use QuadLayers\WP_Orm\Entity\CollectionFactory;
+use QuadLayers\WP_Orm\Factory\CollectionFactory;
 use QuadLayers\WP_Orm\Mapper\CollectionMapper;
 use QuadLayers\WP_Orm\Repository\CollectionRepository;
 
