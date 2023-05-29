@@ -3,14 +3,20 @@
 namespace QuadLayers\WP_Orm\Factory;
 
 use QuadLayers\WP_Orm\Entity\EntityInterface;
+use QuadLayers\WP_Orm\Validator\Validator;
+
+use function QuadLayers\WP_Orm\Helpers\getObjectSchema;
+use function QuadLayers\WP_Orm\Helpers\getSanitizedData;
 
 abstract class AbstractFactory
 {
     private string $entityClass;
+    private Validator $validator;
 
     public function __construct(string $entityClass)
     {
         $this->entityClass = $entityClass;
+        $this->validator = new Validator();
     }
 
     public function create(array $data): EntityInterface
@@ -18,13 +24,21 @@ abstract class AbstractFactory
         // Create a new instance of the entity
         $entity = new $this->entityClass();
 
+        $defaults = $entity->getDefaults();
+
+        $schema = getObjectSchema($defaults);
+
+        $sanitizedData = getSanitizedData($data, $schema);
+
         // Use reflection to get the properties of the class
         $reflection = new \ReflectionClass($entity);
 
         // Loop through each data item
-        foreach ($data as $property => $value) {
+        foreach ($sanitizedData as $property => $value) {
+            $valueType = gettype($value);
+            $propertyType = gettype($entity->$property);
             // Check if the entity has the property and if the value is of the same type
-            if ($reflection->hasProperty($property) && gettype($value) === gettype($entity->$property)) {
+            if ($reflection->hasProperty($property) && $valueType === $propertyType) {
                 // Set the value of the property
                 $entity->$property = $value;
             }

@@ -2,6 +2,7 @@
 
 namespace QuadLayers\WP_Orm\Entity;
 
+use function QuadLayers\WP_Orm\Helpers\arrayRecursiveDiff;
 use function QuadLayers\WP_Orm\Helpers\getObjectVars;
 
 abstract class SingleEntity implements EntityInterface
@@ -43,6 +44,20 @@ abstract class SingleEntity implements EntityInterface
         }
     }
 
+    public function getModifiedProperties(): array
+    {
+        // Get the current state of the object
+
+        $defaults = $this->getDefaults();
+        $properties = $this->getProperties();
+
+        // Compare the current state with the initial state
+        $modifiedProperties = arrayRecursiveDiff($defaults, $properties);
+
+        // Return the modified properties
+        return $modifiedProperties;
+    }
+
     public function getProperties(): array
     {
         return getObjectVars($this);
@@ -72,12 +87,6 @@ abstract class SingleEntity implements EntityInterface
             foreach ($properties as $propertyName => $default) {
                 // Get the type and default value of the property
                 $type = gettype($default);
-
-                // If the type of the property is an object, get its class name
-                if ($type === 'object') {
-                    $type = get_class($this->$propertyName);
-                }
-
                 // Add the property to the schema array
                 $this->schema[$propertyName] = [
                     'type' => $type,

@@ -21,6 +21,6 @@ class SingleMapper implements SingleMapperInterface
 
     public function toArray(EntityInterface $single): array
     {
-        return $single->getProperties();
+        return $single->getModifiedProperties();
     }
 }
