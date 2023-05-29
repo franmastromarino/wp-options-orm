@@ -2,6 +2,8 @@
 
 namespace QuadLayers\WP_Orm\Entity;
 
+use function QuadLayers\WP_Orm\Helpers\getObjectVars;
+
 abstract class SingleEntity implements EntityInterface
 {
     private ?array $defaults = null;
@@ -43,14 +45,7 @@ abstract class SingleEntity implements EntityInterface
 
     public function getProperties(): array
     {
-        $reflection = new \ReflectionClass($this);
-        $reflectionProperties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
-        $properties = [];
-        foreach ($reflectionProperties as $property) {
-            $propertyName = $property->getName();
-            $properties[$propertyName] = $this->$propertyName;
-        }
-        return $properties;
+        return getObjectVars($this);
     }
 
     public function getDefaults(): array
@@ -58,19 +53,7 @@ abstract class SingleEntity implements EntityInterface
         // If defaults have not been set yet
         if ($this->defaults === null) {
             // Initialize the defaults array
-            $this->defaults = [];
-
-            // Get the public properties of this object
-            $reflection = new \ReflectionClass($this);
-            $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
-            // Create a new instance of the class to extract the default values
-            $defaultInstance = $reflection->newInstanceWithoutConstructor();
-
-            // Store the initial value of each property in the defaults array
-            foreach ($properties as $property) {
-                $propertyName = $property->getName();
-                $this->defaults[$propertyName] = $property->getValue($defaultInstance);
-            }
+            $this->defaults = getObjectVars(new static());
         }
 
         // Return the defaults array
@@ -83,20 +66,12 @@ abstract class SingleEntity implements EntityInterface
         if ($this->schema === null) {
             // Initialize the defaults array
             $this->schema = [];
-            // Create an instance of ReflectionClass for this object
-            $reflection = new \ReflectionClass($this);
             // Get the public properties of this object
-            $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
-            // Create a new instance of the class to extract the default values
-            $defaultInstance = $reflection->newInstanceWithoutConstructor();
+            $properties = $this->getDefaults();
             // Iterate over each public property
-            foreach ($properties as $property) {
-                // Get the property name
-                $propertyName = $property->getName();
-
+            foreach ($properties as $propertyName => $default) {
                 // Get the type and default value of the property
-                $type = gettype($this->$propertyName);
-                $default = $property->getValue($defaultInstance);
+                $type = gettype($default);
 
                 // If the type of the property is an object, get its class name
                 if ($type === 'object') {
