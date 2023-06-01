@@ -122,7 +122,7 @@ class CollectionRepository implements CollectionRepositoryInterface
         $found = $this->getEntityIndex($primaryKeyValue);
 
         if ($found !== null) {
-            return null;
+            throw new \InvalidArgumentException("Primary key '{$primaryKeyValue}' already exists in the collection.");
         }
 
         // Get the collection
