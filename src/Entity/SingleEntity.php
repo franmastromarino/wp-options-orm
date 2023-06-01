@@ -8,7 +8,7 @@ use function QuadLayers\WP_Orm\Helpers\getObjectVars;
 abstract class SingleEntity implements EntityInterface
 {
     private ?array $defaults = null;
-    private ?array $schema = null;
+    protected string $primaryKey = 'id';
 
     public function __get(string $key)
     {
@@ -49,6 +49,13 @@ abstract class SingleEntity implements EntityInterface
         // Get the current state of the object
 
         $defaults = $this->getDefaults();
+        /**
+         * Remove the primary key from the defaults array
+         * Always assume that the primary key is modified
+         */
+        if (array_key_exists($this->primaryKey, $defaults)) {
+            unset($defaults[$this->primaryKey]);
+        }
         $properties = $this->getProperties();
 
         // Compare the current state with the initial state
@@ -73,29 +80,5 @@ abstract class SingleEntity implements EntityInterface
 
         // Return the defaults array
         return $this->defaults;
-    }
-
-    public function getSchema(): array
-    {
-        // If defaults have not been set yet
-        if ($this->schema === null) {
-            // Initialize the defaults array
-            $this->schema = [];
-            // Get the public properties of this object
-            $properties = $this->getDefaults();
-            // Iterate over each public property
-            foreach ($properties as $propertyName => $default) {
-                // Get the type and default value of the property
-                $type = gettype($default);
-                // Add the property to the schema array
-                $this->schema[$propertyName] = [
-                    'type' => $type,
-                    'default' => $default
-                ];
-            }
-        }
-
-        // Return the schema array
-        return $this->schema;
     }
 }

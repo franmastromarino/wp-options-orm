@@ -21,6 +21,6 @@ class CollectionMapper implements CollectionMapperInterface
 
     public function toArray(EntityInterface $single): array
     {
-        return $single->getProperties();
+        return $single->getModifiedProperties();
     }
 }

@@ -187,4 +187,9 @@ class CollectionRepository implements CollectionRepositoryInterface
         // Save the updated collection
         return $this->saveAll($collection);
     }
+
+    public function getTable(): string
+    {
+        return $this->table;
+    }
 }
