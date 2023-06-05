@@ -75,7 +75,7 @@ class CollectionRepository implements CollectionRepositoryInterface
 
         $data = get_option($this->table, null);
 
-        $this->cache = $data ? array_map([$this->mapper, 'toEntity'], $data) : null;
+        $this->cache = $data ? array_values(array_map([$this->mapper, 'toEntity'], $data)) : null;
 
         return $this->cache;
     }
@@ -147,6 +147,7 @@ class CollectionRepository implements CollectionRepositoryInterface
 
     public function update($primaryKeyValue, array $data): ?EntityInterface
     {
+
         $index = $this->getEntityIndex($primaryKeyValue);
 
         if ($index === null) {
@@ -155,12 +156,14 @@ class CollectionRepository implements CollectionRepositoryInterface
 
         $collection = $this->findAll();
 
-
         if (!isset($collection[$index])) {
             return null;
         }
 
         $entity = $collection[$index];
+
+        error_log('entity: ' . json_encode($entity, JSON_PRETTY_PRINT));
+
         $updatedData = array_merge($entity->getProperties(), $data);
         $updatedEntity = $this->mapper->toEntity($updatedData);
 
