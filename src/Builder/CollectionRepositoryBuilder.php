@@ -11,7 +11,7 @@ class CollectionRepositoryBuilder
     private string $table;
     private string $primaryKey;
     private string $entityClass;
-    private ?bool $autoIncrement;
+    private ?bool $autoIncrement = null;
 
     public function setTable(string $table): self
     {
