@@ -13,6 +13,7 @@
          <testsuite name="collection">
             <directory>./tests/Collection/CollectionRepositoryBuilderTest.php</directory>
             <directory>./tests/Collection/CollectionRepositoryBuilderTestPrimaryKey.php</directory>
+            <directory>./tests/Collection/CollectionRepositoryBuilderTestPrimaryKeyString.php</directory>
         </testsuite>
          <testsuite name="single">
             <directory>./tests/Single/SingleRepositoryBuilderTest.php</directory>

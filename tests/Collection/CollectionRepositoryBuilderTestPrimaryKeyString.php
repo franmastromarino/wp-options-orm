@@ -17,7 +17,8 @@ class CollectionRepositoryBuilderTestPrimaryKeyString extends TestCase
 
         $builder = (new CollectionRepositoryBuilder())
             ->setTable($this->table)
-            ->setEntity('\QuadLayers\WP_Orm\Tests\Collection\CollectionEntityTestPrimaryKeyString');
+            ->setEntity('\QuadLayers\WP_Orm\Tests\Collection\CollectionEntityTestPrimaryKeyString')
+            ->setAutoIncrement(false);
 
         $this->repository = $builder->getRepository();
 
@@ -32,12 +33,15 @@ class CollectionRepositoryBuilderTestPrimaryKeyString extends TestCase
 
         $test = [
             [
+                'test_id' => 'test1',
                 'key1' => 'test',
             ],
             [
+                'test_id' => 'test2',
                 'key1' => 'test2',
             ],
             [
+                'test_id' => 'test9',
                 'key1' => 'test3',
             ],
         ];
@@ -73,7 +77,7 @@ class CollectionRepositoryBuilderTestPrimaryKeyString extends TestCase
         foreach ($results as $index => $entity) {
             $testEntity = array_merge(
                 $test[$index],
-                ['test_id' => $index]
+                ['test_id' => $test[$index]['test_id']]
             );
             $this->assertEquals($entity->getModifiedProperties(), $testEntity);
         }
@@ -91,11 +95,11 @@ class CollectionRepositoryBuilderTestPrimaryKeyString extends TestCase
 
         Functions\when('update_option')->justReturn(true);
 
-        $entity = $this->repository->create(['key1' => 'value1_2_updated']);
+        $entity = $this->repository->create(['test_id' => 'test1','key1' => 'value1_2_updated']);
 
         $result = $entity->getModifiedProperties();
 
-        $this->assertEquals($result, ['test_id' => 0,'key1' => 'value1_2_updated']);
+        $this->assertEquals($result, ['test_id' => 'test1','key1' => 'value1_2_updated']);
     }
 
     public function testUpdate()
@@ -103,12 +107,12 @@ class CollectionRepositoryBuilderTestPrimaryKeyString extends TestCase
 
         Functions\when('update_option')->justReturn(true);
 
-        $entity0 = $this->repository->create([]);
-        $entity0 = $this->repository->update(0, ['key1' => 'value1_2_updated']);
+        $entity0 = $this->repository->create(['test_id' => 'test1','key1' => 'value1_2_updated']);
+        $entity0 = $this->repository->update('test1', ['key1' => 'value1_2_updated']);
 
         $result = $entity0->getModifiedProperties();
 
-        $this->assertEquals($result, ['test_id' => 0,'key1' => 'value1_2_updated']);
+        $this->assertEquals($result, ['test_id' => 'test1','key1' => 'value1_2_updated']);
     }
 
     public function testDelete()
@@ -116,30 +120,30 @@ class CollectionRepositoryBuilderTestPrimaryKeyString extends TestCase
 
         Functions\when('update_option')->justReturn(true);
 
-        $entity0 = $this->repository->create([]);
-        $entity1 = $this->repository->create([]);
-        $entity2 = $this->repository->create([]);
+        $entity0 = $this->repository->create(['test_id' => 'test1']);
+        $entity1 = $this->repository->create(['test_id' => 'test2']);
+        $entity2 = $this->repository->create(['test_id' => 'test3']);
 
-        $result = $this->repository->delete(0);
+        $result = $this->repository->delete('test1');
 
         $this->assertTrue($result);
-        $this->assertEquals(null, $this->repository->find(0));
-        $this->assertEquals($entity1, $this->repository->find(1));
-        $this->assertEquals($entity2, $this->repository->find(2));
+        $this->assertEquals(null, $this->repository->find('test1'));
+        $this->assertEquals($entity1, $this->repository->find('test2'));
+        $this->assertEquals($entity2, $this->repository->find('test3'));
     }
 
     public function testDefaults()
     {
-        $entity0 = $this->repository->create([]);
-        $entity1 = $this->repository->create([]);
-        $entity2 = $this->repository->create([]);
+        $entity0 = $this->repository->create(['test_id' => 'test1']);
+        $entity1 = $this->repository->create(['test_id' => 'test2']);
+        $entity2 = $this->repository->create(['test_id' => 'test3']);
 
         $results = $this->repository->findAll();
 
         foreach ($results as $index => $entity) {
             $defaults = $entity->getDefaults();
             $this->assertEquals($defaults, [
-                'test_id' => 0,
+                'test_id' => '',
                 'key1' => 'default_value_1',
                 'key2' =>  'default_value_2',
                 'key3' => [

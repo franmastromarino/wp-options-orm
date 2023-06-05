@@ -9,18 +9,20 @@ use QuadLayers\WP_Orm\Entity\Collection;
 class CollectionRepository implements CollectionRepositoryInterface
 {
     private CollectionMapperInterface $mapper;
-    private string $primaryKey;  // Default primary key
     private string $table;
+    private string $primaryKey;  // Default primary key
+    private bool $autoIncrement;  // Default primary key
     /**
      * @var Collection[]
      */
     private ?array $cache = null;
 
-    public function __construct(CollectionMapperInterface $mapper, string $table, string $primaryKey)
+    public function __construct(CollectionMapperInterface $mapper, string $table, string $primaryKey, bool $autoIncrement)
     {
         $this->mapper = $mapper;
         $this->table = $table;
         $this->primaryKey = $primaryKey;
+        $this->autoIncrement = $autoIncrement;
     }
 
     private function getPrimaryKeyValue(EntityInterface $entity)
@@ -112,7 +114,11 @@ class CollectionRepository implements CollectionRepositoryInterface
     {
 
         if (!isset($data[$this->primaryKey])) {
-            $data[$this->primaryKey] = $this->getAutoIncrement();
+            if ($this->autoIncrement) {
+                $data[$this->primaryKey] = $this->getAutoIncrement();
+            } else {
+                throw new \InvalidArgumentException("Primary key '{$this->primaryKey}' is required.");
+            }
         }
 
         $entity = $this->mapper->toEntity($data);

@@ -65,6 +65,6 @@ class CollectionRepositoryBuilder
         $this->setPrimaryKey();
         $factory = new CollectionFactory($this->entityClass);
         $mapper = new CollectionMapper($factory);
-        return new CollectionRepository($mapper, $this->table, $this->primaryKey);
+        return new CollectionRepository($mapper, $this->table, $this->primaryKey, $this->autoIncrement);
     }
 }
