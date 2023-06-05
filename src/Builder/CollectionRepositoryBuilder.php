@@ -39,7 +39,7 @@ class CollectionRepositoryBuilder
     {
 
         // Check if the entity class has the primaryKey property
-        if (!property_exists($this->entityClass, 'primaryKey')) {
+        if (!property_exists($this->entityClass, 'primaryKey') || !isset($this->entityClass::$primaryKey)) {
             throw new \InvalidArgumentException("Class '{$this->entityClass}' does not have the property 'primaryKey'.");
         }
 
