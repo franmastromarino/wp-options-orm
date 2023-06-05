@@ -6,8 +6,8 @@ use function QuadLayers\WP_Orm\Helpers\arrayRecursiveDiff;
 
 abstract class CollectionEntity extends SingleEntity
 {
-    protected string $primaryKey = 'id';
-    public $id = 0;
+    protected string $primaryKey;
+    public $id;
 
     public function getModifiedProperties(): array
     {

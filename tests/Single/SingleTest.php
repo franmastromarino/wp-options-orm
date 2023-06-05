@@ -10,11 +10,11 @@ class SingleTest extends TestCase
     public function testGettersAndSetters()
     {
 
-        $settings = new SingleEntityTest();
+        $entity = new SingleEntityTest();
 
-        $testValue = $settings->getDefaults();
+        $testValue = $entity->getDefaults();
 
-        $this->assertEquals($testValue['key1'], $settings->getKey1());
-        $this->assertEquals($testValue['key2'], $settings->getKey2());
+        $this->assertEquals($testValue['key1'], $entity->getKey1());
+        $this->assertEquals($testValue['key2'], $entity->getKey2());
     }
 }

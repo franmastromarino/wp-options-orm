@@ -19,9 +19,9 @@ class SingleMapperTest extends TestCase
     protected function setUp(): void
     {
 
-        $settings = new SingleEntityTest();
+        $entity = new SingleEntityTest();
 
-        $this->testValue = $settings->getDefaults();
+        $this->testValue = $entity->getDefaults();
 
         $this->factory = new SingleFactory('\QuadLayers\WP_Orm\Tests\Single\SingleEntityTest');
         $this->mapper = new SingleMapper($this->factory);

@@ -18,9 +18,9 @@ class SingleRepositoryTest extends TestCase
     public function testSave()
     {
 
-        $settings = new SingleEntityTest();
+        $entity = new SingleEntityTest();
 
-        $testValue = $settings->getDefaults();
+        $testValue = $entity->getDefaults();
 
         $this->repository
         ->expects($this->once())
@@ -34,7 +34,7 @@ class SingleRepositoryTest extends TestCase
     public function testFind()
     {
 
-        $settings = new SingleEntityTest();
+        $entity = new SingleEntityTest();
 
         $this->repository
         ->expects($this->once())
@@ -44,7 +44,7 @@ class SingleRepositoryTest extends TestCase
         $this->repository
         ->expects($this->once())
         ->method('find')
-        ->willReturn($settings);
+        ->willReturn($entity);
 
         $this->repository->find();
     }
