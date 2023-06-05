@@ -1,6 +1,6 @@
 <?php
 
-namespace QuadLayers\WP_Orm\Tests;
+namespace QuadLayers\WP_Orm\Tests\Single;
 
 class SingleEntityTest extends \QuadLayers\WP_Orm\Entity\SingleEntity
 {

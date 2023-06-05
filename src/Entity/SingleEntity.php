@@ -8,7 +8,20 @@ use function QuadLayers\WP_Orm\Helpers\getObjectVars;
 abstract class SingleEntity implements EntityInterface
 {
     private ?array $defaults = null;
-    protected string $primaryKey = 'id';
+    
+    public function get(string $key)
+    {
+        if (property_exists($this, $key)) {
+            return $this->$key;
+        }
+    }
+
+    public function set(string $key, $value): void
+    {
+        if (property_exists($this, $key)) {
+            $this->$key = $value;
+        }
+    }
 
     public function __get(string $key)
     {
@@ -49,13 +62,7 @@ abstract class SingleEntity implements EntityInterface
         // Get the current state of the object
 
         $defaults = $this->getDefaults();
-        /**
-         * Remove the primary key from the defaults array
-         * Always assume that the primary key is modified
-         */
-        if (array_key_exists($this->primaryKey, $defaults)) {
-            unset($defaults[$this->primaryKey]);
-        }
+
         $properties = $this->getProperties();
 
         // Compare the current state with the initial state

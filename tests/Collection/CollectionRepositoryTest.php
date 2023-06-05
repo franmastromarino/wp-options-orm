@@ -1,11 +1,10 @@
 <?php
 
-namespace QuadLayers\WP_Orm\Tests\Repository;
+namespace QuadLayers\WP_Orm\Tests\Collection\Repository;
 
 use PHPUnit\Framework\TestCase;
-use QuadLayers\WP_Orm\Entity\EntityInterface;
 use QuadLayers\WP_Orm\Repository\CollectionRepositoryInterface;
-use QuadLayers\WP_Orm\Tests\CollectionEntityTest;
+use QuadLayers\WP_Orm\Tests\Collection\CollectionEntityTest;
 
 class CollectionRepositoryTest extends TestCase
 {

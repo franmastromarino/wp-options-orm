@@ -1,9 +1,9 @@
 <?php
 
-namespace QuadLayers\WP_Orm\Tests\Entity;
+namespace QuadLayers\WP_Orm\Tests\Collection\Entity;
 
 use PHPUnit\Framework\TestCase;
-use QuadLayers\WP_Orm\Tests\CollectionEntityTest;
+use QuadLayers\WP_Orm\Tests\Collection\CollectionEntityTest;
 
 class CollectionTest extends TestCase
 {

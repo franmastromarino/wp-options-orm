@@ -1,6 +1,6 @@
 <?php
 
-namespace QuadLayers\WP_Orm\Tests;
+namespace QuadLayers\WP_Orm\Tests\Collection;
 
 use PHPUnit\Framework\TestCase;
 use Brain\Monkey\Functions;
@@ -17,7 +17,7 @@ class CollectionRepositoryBuilderTest extends TestCase
 
         $builder = (new CollectionRepositoryBuilder())
             ->setTable($this->table)
-            ->setEntity('\QuadLayers\WP_Orm\Tests\CollectionEntityTest')
+            ->setEntity('\QuadLayers\WP_Orm\Tests\Collection\CollectionEntityTest')
             ->setPrimaryKey('id');
 
         $this->repository = $builder->getRepository();

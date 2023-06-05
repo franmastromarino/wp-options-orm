@@ -1,6 +1,6 @@
 <?php
 
-namespace QuadLayers\WP_Orm\Tests;
+namespace QuadLayers\WP_Orm\Tests\Single;
 
 use PHPUnit\Framework\TestCase;
 use Brain\Monkey\Functions;
@@ -33,7 +33,7 @@ class SingleRepositoryBuilderTest extends TestCase
 
         $builder = (new SingleRepositoryBuilder())
         ->setTable($this->table)
-        ->setEntity('\QuadLayers\WP_Orm\Tests\SingleEntityTest');
+        ->setEntity('\QuadLayers\WP_Orm\Tests\Single\SingleEntityTest');
 
         $this->repository = $builder->getRepository();
 

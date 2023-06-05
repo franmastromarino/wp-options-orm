@@ -11,10 +11,10 @@
             <directory>./tests/Helpers</directory>
         </testsuite>
          <testsuite name="collection">
-            <directory>./tests/Builder/CollectionRepositoryBuilderTest.php</directory>
+            <directory>./tests/Collection/CollectionRepositoryBuilderTest.php</directory>
         </testsuite>
          <testsuite name="single">
-            <directory>./tests/Builder/SingleRepositoryBuilderTest.php</directory>
+            <directory>./tests/Single/SingleRepositoryBuilderTest.php</directory>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -1,6 +1,6 @@
 <?php
 
-namespace QuadLayers\WP_Orm\Tests;
+namespace QuadLayers\WP_Orm\Tests\Collection;
 
 class CollectionEntityTest extends \QuadLayers\WP_Orm\Entity\CollectionEntity
 {

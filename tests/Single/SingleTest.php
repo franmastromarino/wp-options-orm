@@ -1,9 +1,9 @@
 <?php
 
-namespace QuadLayers\WP_Orm\Tests\Entity;
+namespace QuadLayers\WP_Orm\Tests\Single\Entity;
 
 use PHPUnit\Framework\TestCase;
-use QuadLayers\WP_Orm\Tests\SingleEntityTest;
+use QuadLayers\WP_Orm\Tests\Single\SingleEntityTest;
 
 class SingleTest extends TestCase
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace QuadLayers\WP_Orm\Tests\Mapper;
+namespace QuadLayers\WP_Orm\Tests\Single\Mapper;
 
 use PHPUnit\Framework\TestCase;
 use QuadLayers\WP_Orm\Entity\SingleEntity;
 use QuadLayers\WP_Orm\Entity\EntityInterface;
 use QuadLayers\WP_Orm\Factory\SingleFactory;
 use QuadLayers\WP_Orm\Mapper\SingleMapper;
-use QuadLayers\WP_Orm\Tests\SingleEntityTest;
+use QuadLayers\WP_Orm\Tests\Single\SingleEntityTest;
 
 class SingleMapperTest extends TestCase
 {
@@ -23,7 +23,7 @@ class SingleMapperTest extends TestCase
 
         $this->testValue = $settings->getDefaults();
 
-        $this->factory = new SingleFactory('\QuadLayers\WP_Orm\Tests\SingleEntityTest');
+        $this->factory = new SingleFactory('\QuadLayers\WP_Orm\Tests\Single\SingleEntityTest');
         $this->mapper = new SingleMapper($this->factory);
         $this->entity = $this->mapper->toEntity($this->testValue);
     }
