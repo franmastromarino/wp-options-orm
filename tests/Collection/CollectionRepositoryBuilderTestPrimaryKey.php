@@ -7,7 +7,7 @@ use Brain\Monkey\Functions;
 use QuadLayers\WP_Orm\Builder\CollectionRepositoryBuilder;
 use QuadLayers\WP_Orm\Repository\CollectionRepository;
 
-class CollectionRepositoryBuilderTest extends TestCase
+class CollectionRepositoryBuilderTestPrimaryKey extends TestCase
 {
     private string $table = 'test_table';
     private CollectionRepository $repository;
@@ -17,7 +17,7 @@ class CollectionRepositoryBuilderTest extends TestCase
 
         $builder = (new CollectionRepositoryBuilder())
             ->setTable($this->table)
-            ->setEntity('\QuadLayers\WP_Orm\Tests\Collection\CollectionEntityTest');
+            ->setEntity('\QuadLayers\WP_Orm\Tests\Collection\CollectionEntityTestPrimaryKey');
 
         $this->repository = $builder->getRepository();
 
@@ -73,7 +73,7 @@ class CollectionRepositoryBuilderTest extends TestCase
         foreach ($results as $index => $entity) {
             $testEntity = array_merge(
                 $test[$index],
-                ['id' => $index]
+                ['test' => $index]
             );
             $this->assertEquals($entity->getModifiedProperties(), $testEntity);
         }
@@ -95,7 +95,7 @@ class CollectionRepositoryBuilderTest extends TestCase
 
         $result = $entity->getModifiedProperties();
 
-        $this->assertEquals($result, ['id' => 0,'key1' => 'value1_2_updated']);
+        $this->assertEquals($result, ['test' => 0,'key1' => 'value1_2_updated']);
     }
 
     public function testUpdate()
@@ -108,7 +108,7 @@ class CollectionRepositoryBuilderTest extends TestCase
 
         $result = $entity0->getModifiedProperties();
 
-        $this->assertEquals($result, ['id' => 0,'key1' => 'value1_2_updated']);
+        $this->assertEquals($result, ['test' => 0,'key1' => 'value1_2_updated']);
     }
 
     public function testDelete()
@@ -139,7 +139,7 @@ class CollectionRepositoryBuilderTest extends TestCase
         foreach ($results as $index => $entity) {
             $defaults = $entity->getDefaults();
             $this->assertEquals($defaults, [
-                'id' => 0,
+                'test' => 0,
                 'key1' => 'default_value_1',
                 'key2' =>  'default_value_2',
                 'key3' => [

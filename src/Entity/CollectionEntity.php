@@ -6,8 +6,7 @@ use function QuadLayers\WP_Orm\Helpers\arrayRecursiveDiff;
 
 abstract class CollectionEntity extends SingleEntity
 {
-    protected string $primaryKey;
-    public $id;
+    public static string $primaryKey;
 
     public function getModifiedProperties(): array
     {
@@ -18,8 +17,8 @@ abstract class CollectionEntity extends SingleEntity
          * Remove the primary key from the defaults array
          * Always assume that the primary key is modified
          */
-        if (array_key_exists($this->primaryKey, $defaults)) {
-            unset($defaults[$this->primaryKey]);
+        if (array_key_exists(static::$primaryKey, $defaults)) {
+            unset($defaults[static::$primaryKey]);
         }
         $properties = $this->getProperties();
 

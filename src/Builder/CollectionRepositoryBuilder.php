@@ -28,8 +28,15 @@ class CollectionRepositoryBuilder
         return $this;
     }
 
-    public function setPrimaryKey(string $primaryKey): self
+    public function setPrimaryKey(): self
     {
+
+        // Check if the entity class has the primaryKey property
+        if (!property_exists($this->entityClass, 'primaryKey')) {
+            throw new \InvalidArgumentException("Class '{$this->entityClass}' does not have the property 'primaryKey'.");
+        }
+
+        $primaryKey = $this->entityClass::$primaryKey;
 
         // Check if the entity class has the primaryKey property
         if (!property_exists($this->entityClass, $primaryKey)) {
@@ -43,6 +50,8 @@ class CollectionRepositoryBuilder
 
     public function getRepository(): CollectionRepository
     {
+
+        $this->setPrimaryKey();
         $factory = new CollectionFactory($this->entityClass);
         $mapper = new CollectionMapper($factory);
         return new CollectionRepository($mapper, $this->table, $this->primaryKey);

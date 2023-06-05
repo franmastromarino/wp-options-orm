@@ -2,10 +2,10 @@
 
 namespace QuadLayers\WP_Orm\Tests\Collection;
 
-class CollectionEntityTest extends \QuadLayers\WP_Orm\Entity\CollectionEntity
+class CollectionEntityTestPrimaryKey extends \QuadLayers\WP_Orm\Entity\CollectionEntity
 {
-    public static string $primaryKey = 'id';
-    public $id = 0;
+    public static string $primaryKey = 'test';
+    public $test = 0;
     public $key1 = 'default_value_1';
     public $key2 = 'default_value_2';
     public $key3 = [
