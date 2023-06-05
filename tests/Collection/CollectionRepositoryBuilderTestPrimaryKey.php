@@ -17,7 +17,8 @@ class CollectionRepositoryBuilderTestPrimaryKey extends TestCase
 
         $builder = (new CollectionRepositoryBuilder())
             ->setTable($this->table)
-            ->setEntity('\QuadLayers\WP_Orm\Tests\Collection\CollectionEntityTestPrimaryKey');
+            ->setEntity('\QuadLayers\WP_Orm\Tests\Collection\CollectionEntityTestPrimaryKey')
+            ->setAutoIncrement(true);
 
         $this->repository = $builder->getRepository();
 

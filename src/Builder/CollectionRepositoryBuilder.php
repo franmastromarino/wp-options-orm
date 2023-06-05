@@ -11,6 +11,7 @@ class CollectionRepositoryBuilder
     private string $table;
     private string $primaryKey;
     private string $entityClass;
+    private ?bool $autoIncrement;
 
     public function setTable(string $table): self
     {
@@ -25,6 +26,12 @@ class CollectionRepositoryBuilder
         }
 
         $this->entityClass = $entityClass;
+        return $this;
+    }
+
+    public function setAutoIncrement(bool $autoIncrement): self
+    {
+        $this->autoIncrement = $autoIncrement;
         return $this;
     }
 
@@ -50,6 +57,10 @@ class CollectionRepositoryBuilder
 
     public function getRepository(): CollectionRepository
     {
+
+        if (null === $this->autoIncrement) {
+            throw new \InvalidArgumentException("Auto increment is not set.");
+        }
 
         $this->setPrimaryKey();
         $factory = new CollectionFactory($this->entityClass);
