@@ -153,9 +153,9 @@ function getSanitizedData($data, array $schema, bool $strict = false)
                     $sanitized[$key] = $value;
                 } elseif (is_string($value)) {
                     // Convert 'true'/'false' strings to corresponding boolean values
-                    if (strtolower($value) === 'true') {
+                    if (strtolower($value) === 'true' || strtolower($value) === '1') {
                         $sanitized[$key] = true;
-                    } elseif (strtolower($value) === 'false') {
+                    } elseif (strtolower($value) === 'false' || strtolower($value) === '0') {
                         $sanitized[$key] = false;
                     } else {
                        // Check if default is set before assigning.
