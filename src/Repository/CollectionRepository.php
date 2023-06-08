@@ -125,9 +125,9 @@ class CollectionRepository implements CollectionRepositoryInterface
 
         $primaryKeyValue = $this->getPrimaryKeyValue($entity);
 
-        $found = $this->getEntityIndex($primaryKeyValue);
+        $index = $this->getEntityIndex($primaryKeyValue);
 
-        if ($found !== null) {
+        if ($index !== null) {
             throw new \InvalidArgumentException("Primary key '{$primaryKeyValue}' already exists in the collection.");
         }
 
@@ -162,13 +162,11 @@ class CollectionRepository implements CollectionRepositoryInterface
 
         $entity = $collection[$index];
 
-        error_log('entity: ' . json_encode($entity, JSON_PRETTY_PRINT));
-
         $updatedData = array_merge($entity->getProperties(), $data);
         $updatedEntity = $this->mapper->toEntity($updatedData);
 
         // Update the entity in the collection
-        $collection[$primaryKeyValue] = $updatedEntity;
+        $collection[$index] = $updatedEntity;
         // Save the updated collection
         if (!$this->saveAll($collection)) {
             return null;
