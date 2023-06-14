@@ -98,78 +98,78 @@ function getSanitizedData($data, array $schema, bool $strict = false)
         $value = $data[$key] ?? null;
 
         switch ($property['type']) {
-            case 'integer':
-            case 'double':
-            case 'number':
-                if (gettype($value) === 'integer' || gettype($value) === 'double') {
-                    $sanitized[$key] = $value;
-                } else {
-                    $sanitizedValue = filter_var($value, FILTER_VALIDATE_FLOAT);
-                    if ($sanitizedValue === false) {
-                        // Check if default is set before assigning.
-                        if (array_key_exists('default', $property)) {
-                            $sanitized[$key] = $property['default'];
-                        }
-                    } else {
-                        // Keep the number as an integer if it has no decimal part
-                        $sanitized[$key] = floor($sanitizedValue) == $sanitizedValue ? (int)$sanitizedValue : $sanitizedValue;
-                    }
-                }
-                break;
-            case 'string':
-                $sanitized[$key] = htmlentities($value, ENT_QUOTES, 'UTF-8');
-                break;
-            case 'array':
-                if (is_array($value) || is_object($value)) {
-                    if (isset($property['properties'])) {
-                        $sanitized[$key] = (array) getSanitizedData($value, $property['properties'], $strict);
-                    } else {
-                        $sanitized[$key] = (array) $value;
-                    }
-                } else {
+        case 'integer':
+        case 'double':
+        case 'number':
+            if (gettype($value) === 'integer' || gettype($value) === 'double') {
+                $sanitized[$key] = $value;
+            } else {
+                $sanitizedValue = filter_var($value, FILTER_VALIDATE_FLOAT);
+                if ($sanitizedValue === false) {
                     // Check if default is set before assigning.
                     if (array_key_exists('default', $property)) {
                         $sanitized[$key] = $property['default'];
                     }
-                }
-                break;
-            case 'object':
-                if (is_object($value) || is_array($value)) {
-                    if (isset($property['properties'])) {
-                        $sanitized[$key] = (object) getSanitizedData($value, $property['properties'], $strict);
-                    } else {
-                        $sanitized[$key] = (object) $value;
-                    }
                 } else {
-                    // Check if default is set before assigning.
-                    if (array_key_exists('default', $property)) {
-                        $sanitized[$key] = $property['default'];
-                    }
+                    // Keep the number as an integer if it has no decimal part
+                    $sanitized[$key] = floor($sanitizedValue) == $sanitizedValue ? (int)$sanitizedValue : $sanitizedValue;
                 }
-                break;
+            }
+            break;
+        case 'string':
+            $sanitized[$key] = htmlentities($value, ENT_QUOTES, 'UTF-8');
+            break;
+        case 'array':
+            if (is_array($value) || is_object($value)) {
+                if (isset($property['properties'])) {
+                    $sanitized[$key] = (array) getSanitizedData($value, $property['properties'], $strict);
+                } else {
+                    $sanitized[$key] = (array) $value;
+                }
+            } else {
+                // Check if default is set before assigning.
+                if (array_key_exists('default', $property)) {
+                    $sanitized[$key] = $property['default'];
+                }
+            }
+            break;
+        case 'object':
+            if (is_object($value) || is_array($value)) {
+                if (isset($property['properties'])) {
+                    $sanitized[$key] = (object) getSanitizedData($value, $property['properties'], $strict);
+                } else {
+                    $sanitized[$key] = (object) $value;
+                }
+            } else {
+                // Check if default is set before assigning.
+                if (array_key_exists('default', $property)) {
+                    $sanitized[$key] = $property['default'];
+                }
+            }
+            break;
                 // break;
-            case 'boolean':
-                if (is_bool($value)) {
-                    $sanitized[$key] = $value;
-                } elseif (is_string($value)) {
-                    // Convert 'true'/'false' strings to corresponding boolean values
-                    if (strtolower($value) === 'true' || strtolower($value) === '1') {
-                        $sanitized[$key] = true;
-                    } elseif (strtolower($value) === 'false' || strtolower($value) === '0') {
-                        $sanitized[$key] = false;
-                    } else {
-                       // Check if default is set before assigning.
-                        if (array_key_exists('default', $property)) {
-                            $sanitized[$key] = $property['default'];
-                        }
-                    }
+        case 'boolean':
+            if (is_bool($value)) {
+                $sanitized[$key] = $value;
+            } elseif (is_string($value)) {
+                // Convert 'true'/'false' strings to corresponding boolean values
+                if (strtolower($value) === 'true' || strtolower($value) === '1') {
+                    $sanitized[$key] = true;
+                } elseif (strtolower($value) === 'false' || strtolower($value) === '0') {
+                    $sanitized[$key] = false;
                 } else {
-                    // Cast non-string values to boolean
-                    $sanitized[$key] = (bool)$value;
+                    // Check if default is set before assigning.
+                    if (array_key_exists('default', $property)) {
+                        $sanitized[$key] = $property['default'];
+                    }
                 }
-                break;
-            default:
-                throw new \InvalidArgumentException("Unsupported type '{$property['type']}' in schema for key '{$key}'");
+            } else {
+                // Cast non-string values to boolean
+                $sanitized[$key] = (bool)$value;
+            }
+            break;
+        default:
+            throw new \InvalidArgumentException("Unsupported type '{$property['type']}' in schema for key '{$key}'");
         }
     }
 

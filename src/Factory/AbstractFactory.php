@@ -3,7 +3,6 @@
 namespace QuadLayers\WP_Orm\Factory;
 
 use QuadLayers\WP_Orm\Entity\EntityInterface;
-use QuadLayers\WP_Orm\Validator\Validator;
 
 use function QuadLayers\WP_Orm\Helpers\getObjectSchema;
 use function QuadLayers\WP_Orm\Helpers\getSanitizedData;
@@ -11,12 +10,10 @@ use function QuadLayers\WP_Orm\Helpers\getSanitizedData;
 abstract class AbstractFactory
 {
     private string $entityClass;
-    private Validator $validator;
 
     public function __construct(string $entityClass)
     {
         $this->entityClass = $entityClass;
-        $this->validator = new Validator();
     }
 
     public function create(array $data): EntityInterface

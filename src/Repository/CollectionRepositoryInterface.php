@@ -9,7 +9,6 @@ interface CollectionRepositoryInterface
     public function findAll(): ?array;
     public function saveAll(array $single): bool;
     public function find($primaryKeyValue): ?EntityInterface;
-    // public function save(EntityInterface $single): bool;
     public function update($primaryKeyValue, array $data): ?EntityInterface;
     public function delete($primaryKeyValue): bool;
     public function create(array $data): ?EntityInterface;
