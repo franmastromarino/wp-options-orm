@@ -60,7 +60,9 @@ class CollectionRepository implements CollectionRepositoryInterface
             return 0;
         }
 
-        $maxPrimaryKey = max(array_map(fn($entity) => $entity->{$this->primaryKey}, $collection));
+        $maxPrimaryKey = max(array_map(function ($entity) {
+            return $entity->{$this->primaryKey};
+        }, $collection));
 
         return $maxPrimaryKey + 1;
     }
