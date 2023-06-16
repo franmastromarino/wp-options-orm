@@ -61,8 +61,6 @@
 		"test-single": "./vendor/bin/phpunit --testsuite single",
 		"start": "composer install && composer dump-autoload",
 		"build": "composer install --no-dev && composer dump-autoload -o --no-dev",
-        "phpcs": "phpcs --standard=PSR12 src/",
-        "phpcbf": "phpcbf --standard=PSR12 src/",
 		"phpcs:report:csv": "./vendor/bin/phpcs --warning-severity=0 --extensions=php --report=csv --report-file=./phpcs_error.csv ./src",
 		"phpcs:report:txt": "./vendor/bin/phpcs --warning-severity=0 --extensions=php --report-file=./phpcs_error.txt ./src",
 		"phpcs:report:autofix": "./vendor/bin/phpcbf ./src"

@@ -8,7 +8,7 @@ use function QuadLayers\WP_Orm\Helpers\getObjectVars;
 abstract class SingleEntity implements EntityInterface
 {
     private ?array $defaults = null;
-    
+
     public function get(string $key)
     {
         if (property_exists($this, $key)) {
