@@ -8,9 +8,15 @@ use QuadLayers\WP_Orm\Repository\SingleRepository;
 
 class SingleRepositoryBuilder
 {
-    private string $table;
-    private string $group;
-    private string $entityClass;
+    /**
+     * @var string
+     */
+    private $table;
+
+    /**
+     * @var string
+     */
+    private $entityClass;
 
     public function setTable(string $table): self
     {

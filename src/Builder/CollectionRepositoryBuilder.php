@@ -8,10 +8,25 @@ use QuadLayers\WP_Orm\Repository\CollectionRepository;
 
 class CollectionRepositoryBuilder
 {
-    private string $table;
-    private string $primaryKey;
-    private string $entityClass;
-    private ?bool $autoIncrement = null;
+    /**
+     * @var string
+     */
+    private $table;
+
+    /**
+     * @var string
+     */
+    private $primaryKey;
+
+    /**
+     * @var string
+     */
+    private $entityClass;
+
+    /**
+     * @var bool|null
+     */
+    private $autoIncrement = null;
 
     public function setTable(string $table): self
     {

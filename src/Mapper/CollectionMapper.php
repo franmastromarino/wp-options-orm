@@ -7,7 +7,10 @@ use QuadLayers\WP_Orm\Factory\CollectionFactory;
 
 class CollectionMapper implements CollectionMapperInterface
 {
-    private CollectionFactory $factory;
+     /**
+     * @var CollectionFactory
+     */
+    private $factory;
 
     public function __construct(CollectionFactory $factory)
     {

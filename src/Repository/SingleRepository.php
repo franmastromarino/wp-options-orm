@@ -7,9 +7,20 @@ use QuadLayers\WP_Orm\Mapper\SingleMapperInterface;
 
 class SingleRepository implements SingleRepositoryInterface
 {
-    private SingleMapperInterface $mapper;
-    private string $table;
-    private ?EntityInterface $cache = null;
+    /**
+     * @var SingleMapperInterface
+     */
+    private $mapper;
+
+    /**
+     * @var string
+     */
+    private $table;
+
+    /**
+     * @var EntityInterface|null
+     */
+    private $cache = null;
 
     public function __construct(SingleMapperInterface $mapper, string $table)
     {

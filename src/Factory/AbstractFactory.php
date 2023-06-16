@@ -9,7 +9,10 @@ use function QuadLayers\WP_Orm\Helpers\getSanitizedData;
 
 abstract class AbstractFactory
 {
-    private string $entityClass;
+     /**
+     * @var string
+     */
+    private $entityClass;
 
     public function __construct(string $entityClass)
     {

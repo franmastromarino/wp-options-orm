@@ -8,14 +8,30 @@ use QuadLayers\WP_Orm\Entity\Collection;
 
 class CollectionRepository implements CollectionRepositoryInterface
 {
-    private CollectionMapperInterface $mapper;
-    private string $table;
-    private string $primaryKey;  // Default primary key
-    private bool $autoIncrement;  // Default primary key
     /**
-     * @var Collection[]
+     * @var CollectionMapperInterface
      */
-    private ?array $cache = null;
+    private $mapper;
+
+    /**
+     * @var string
+     */
+    private $table;
+
+    /**
+     * @var string
+     */
+    private $primaryKey;
+
+    /**
+     * @var bool
+     */
+    private $autoIncrement;
+
+    /**
+     * @var Collection[]|null
+     */
+    private $cache = null;
 
     public function __construct(CollectionMapperInterface $mapper, string $table, string $primaryKey, bool $autoIncrement)
     {

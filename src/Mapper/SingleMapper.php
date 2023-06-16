@@ -7,7 +7,10 @@ use QuadLayers\WP_Orm\Factory\SingleFactory;
 
 class SingleMapper implements SingleMapperInterface
 {
-    private SingleFactory $factory;
+    /**
+     * @var SingleFactory
+     */
+    private $factory;
 
     public function __construct(SingleFactory $factory)
     {
