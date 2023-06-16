@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<ruleset name="WP ORM">
+    <description>PHP CodeSniffer configuration for WP ORM using PSR12, PHPCompatibility, and some additional rules</description>
+
+    <!-- Set the default coding standards to PSR12 and PHPCompatibility -->
+    <rule ref="PSR12"/>
+    <rule ref="PHPCompatibility"/>
+
+    <!-- Specify the PHP version to check for compatibility -->
+    <config name="testVersion" value="7.1-"/>
+
+    <!-- Files to include -->
+    <file>src</file>
+
+    <!-- Exclude specific files/folders -->
+    <exclude-pattern>*/tests/*</exclude-pattern>
+
+    <!-- Ignore warnings, show only errors -->
+    <arg value="n"/>
+
+    <!-- Show sniff codes in all reports -->
+    <arg value="s"/>
+
+    <!-- Additional rules -->
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter">
+        <severity>10</severity>
+    </rule>
+    <rule ref="Generic.CodeAnalysis.EmptyStatement">
+        <severity>10</severity>
+    </rule>
+    <rule ref="Generic.PHP.LowerCaseConstant">
+        <severity>10</severity>
+    </rule>
+    <rule ref="Generic.PHP.DeprecatedFunctions">
+        <severity>10</severity>
+    </rule>
+</ruleset>

@@ -4,3 +4,4 @@ composer.lock
 phpcs_error.txt
 .delete
 .DS_Store
+.vscode/settings.json
