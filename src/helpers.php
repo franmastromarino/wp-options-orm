@@ -46,27 +46,40 @@ function getObjectSchema($properties): array
     return $schema;
 }
 
+/**
+ * Recursively compares two arrays and returns the differences between them.
+ *
+ * @param array $array1 The first array to compare.
+ * @param array $array2 The second array to compare.
+ *
+ * @return array The differences between the two arrays.
+ */
 function arrayRecursiveDiff($array1, $array2)
 {
     $result = array();
 
     foreach ($array2 as $key => $value) {
-        if (array_key_exists($key, $array1)) {
-            if (is_array($value)) {
-                $recursiveDiff = arrayRecursiveDiff($array1[$key], $value);
-                if (count($recursiveDiff)) {
-                    $result[$key] = $recursiveDiff;
-                }
-            } elseif (is_object($value)) {
-                $recursiveDiff = arrayRecursiveDiff((array) $array1[$key], (array) $value);
-                if (count($recursiveDiff)) {
-                    $result[$key] = (object) $recursiveDiff;
-                }
-            } elseif ($value !== $array1[$key]) {
-                $result[$key] = $value;
-            }
-        } else {
+        // Condition 1: Check if the key doesn't exist in $array1 or if the values are not equal
+        if (!array_key_exists($key, $array1) || $value !== $array1[$key]) {
             $result[$key] = $value;
+        }
+        // Condition 2: Check if the value is an array
+        elseif (is_array($value)) {
+            // Recursively compare arrays
+            $recursiveDiff = arrayRecursiveDiff($array1[$key], $value);
+            // Check if there are any differences
+            if (count($recursiveDiff)) {
+                $result[$key] = $recursiveDiff;
+            }
+        }
+        // Condition 3: Check if the value is an object
+        elseif (is_object($value)) {
+            // Convert objects to arrays and recursively compare
+            $recursiveDiff = arrayRecursiveDiff((array)$array1[$key], (array)$value);
+            // Check if there are any differences
+            if (count($recursiveDiff)) {
+                $result[$key] = (object)$recursiveDiff;
+            }
         }
     }
 
