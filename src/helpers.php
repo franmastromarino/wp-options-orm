@@ -111,6 +111,9 @@ function getSanitizedData($data, array $schema, bool $strict = false)
         $value = $data[$key] ?? null;
 
         switch ($property['type']) {
+            case 'NULL':
+                $sanitized[$key] = null;
+                break;
             case 'integer':
             case 'double':
             case 'number':
