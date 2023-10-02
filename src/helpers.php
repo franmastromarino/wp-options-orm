@@ -133,7 +133,7 @@ function getSanitizedData($data, array $schema, bool $strict = false)
                 }
                 break;
             case 'string':
-                $sanitized[$key] = htmlentities($value, ENT_QUOTES, 'UTF-8');
+                $sanitized[$key] = (string) $value;
                 break;
             case 'array':
                 if (is_array($value) || is_object($value)) {
