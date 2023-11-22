@@ -21,9 +21,9 @@ In summary, WP ORM offers a developer-friendly, efficient, and streamlined appro
 
 ## Installation
 
-1. Download `wp-orm` from the repository.
-2. Install it in your WordPress environment as a plugin.
-3. Activate the plugin in the WordPress plugins dashboard.
+```
+composer require franmastromarino/wp-orm
+```
 
 ## Usage
 
