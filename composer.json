@@ -1,5 +1,5 @@
 {
-	"name": "franmastromarino/wp-orm",
+	"name": "franmastromarino/wp-options-orm",
     "description": "A package to help developers create custom WordPress entities in their own plugins.",
 	"type": "library",
 	"keywords": [
@@ -15,7 +15,7 @@
 		}
 	],
 	"support": {
-		"issues": "https://github.com/franmastromarino/wp-orm/issues"
+		"issues": "https://github.com/franmastromarino/wp-options-orm/issues"
 	},
 	"prefer-stable": true,
 	"minimum-stability": "dev",

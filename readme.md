@@ -22,7 +22,7 @@ In summary, WP ORM offers a developer-friendly, efficient, and streamlined appro
 ## Installation
 
 ```
-composer require franmastromarino/wp-orm
+composer require franmastromarino/wp-options-orm
 ```
 
 ## Usage
