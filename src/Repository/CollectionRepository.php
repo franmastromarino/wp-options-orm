@@ -101,7 +101,7 @@ class CollectionRepository implements CollectionRepositoryInterface
     public function saveAll(array $collection): bool
     {
         $this->cache = $collection;
-        $data = array_map([$this->mapper, 'toArray'], $collection);
+        $data = array_values(array_map([$this->mapper, 'toArray'], $collection));
         return update_option($this->table, $data);
     }
 

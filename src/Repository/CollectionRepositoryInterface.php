@@ -7,7 +7,7 @@ use QuadLayers\WP_Orm\Entity\EntityInterface;
 interface CollectionRepositoryInterface
 {
     public function findAll(): ?array;
-    public function saveAll(array $single): bool;
+    public function saveAll(array $collection): bool;
     public function find($primaryKeyValue): ?EntityInterface;
     public function update($primaryKeyValue, array $data): ?EntityInterface;
     public function delete($primaryKeyValue): bool;
