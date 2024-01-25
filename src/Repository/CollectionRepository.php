@@ -27,18 +27,23 @@ class CollectionRepository implements CollectionRepositoryInterface
      * @var bool
      */
     private $autoIncrement;
+    /**
+     * @var array|null
+     */
+    private $defaultEntities;
 
     /**
      * @var Collection[]|null
      */
     private $cache = null;
 
-    public function __construct(CollectionMapperInterface $mapper, string $table, string $primaryKey, bool $autoIncrement)
+    public function __construct(CollectionMapperInterface $mapper, string $table, string $primaryKey, bool $autoIncrement, array $defaultEntities = null)
     {
         $this->mapper = $mapper;
         $this->table = $table;
         $this->primaryKey = $primaryKey;
         $this->autoIncrement = $autoIncrement;
+        $this->defaultEntities = $defaultEntities;
     }
 
     private function getPrimaryKeyValue(EntityInterface $entity)
@@ -91,7 +96,8 @@ class CollectionRepository implements CollectionRepositoryInterface
             return $this->cache;
         }
 
-        $data = get_option($this->table, null);
+        // Merge the default entities with the found entities
+        $data = get_option($this->table, $this->defaultEntities);
 
         $this->cache = $data ? array_values(array_map([$this->mapper, 'toEntity'], $data)) : null;
 

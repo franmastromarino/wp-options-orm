@@ -12,6 +12,7 @@
         </testsuite>
          <testsuite name="collection">
             <directory>./tests/Collection/CollectionRepositoryBuilderTest.php</directory>
+            <directory>./tests/Collection/CollectionRepositoryBuilderTestDefaultEntities.php</directory>
             <directory>./tests/Collection/CollectionRepositoryBuilderTestPrimaryKey.php</directory>
             <directory>./tests/Collection/CollectionRepositoryBuilderTestPrimaryKeyString.php</directory>
         </testsuite>

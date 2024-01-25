@@ -24,6 +24,11 @@ class CollectionRepositoryBuilder
     private $entityClass;
 
     /**
+     * @var array|null
+     */
+    private $defaultEntities;
+
+    /**
      * @var bool|null
      */
     private $autoIncrement = null;
@@ -41,6 +46,12 @@ class CollectionRepositoryBuilder
         }
 
         $this->entityClass = $entityClass;
+        return $this;
+    }
+
+    public function setDefaultEntities(array $defaultEntities): self
+    {
+        $this->defaultEntities = $defaultEntities;
         return $this;
     }
 
@@ -80,6 +91,6 @@ class CollectionRepositoryBuilder
         $this->setPrimaryKey();
         $factory = new CollectionFactory($this->entityClass);
         $mapper = new CollectionMapper($factory);
-        return new CollectionRepository($mapper, $this->table, $this->primaryKey, $this->autoIncrement);
+        return new CollectionRepository($mapper, $this->table, $this->primaryKey, $this->autoIncrement, $this->defaultEntities);
     }
 }
