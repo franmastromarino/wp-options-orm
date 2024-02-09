@@ -24,21 +24,36 @@ abstract class AbstractFactory
         // Create a new instance of the entity
         $entity = new $this->entityClass();
 
-        $defaults = $entity->getDefaults();
+        // Get the default values of the entity, new static() is used to get the defaults of the child class
+        $entityDefaults = $entity->getDefaults();
 
-        $schema = getObjectSchema($defaults);
+        $entitySchema = getObjectSchema($entityDefaults);
 
-        $sanitizedData = getSanitizedData($data, $schema);
+        $sanitizedData = getSanitizedData($data, $entitySchema);
 
         // Use reflection to get the properties of the class
-        $reflection = new \ReflectionClass($entity);
+        $entityReflection = new \ReflectionClass($entity);
+
+        // Get private properties of the entity
+        $entityPrivates = $entity::PRIVATE_PROPERTIES;
+
+        // Check if the entity has private properties and update them
+        if (count($entityPrivates) > 0) {
+            // Loop through each private property
+            foreach ($entityPrivates as $propertyName) {
+                if (array_key_exists($propertyName, $data)) {
+                    // Set the value of the property
+                    $entity->set($propertyName, $data[$propertyName]);
+                }
+            }
+        }
 
         // Loop through each data item
         foreach ($sanitizedData as $property => $value) {
             $valueType = gettype($value);
             $propertyType = gettype($entity->$property);
             // Check if the entity has the property and if the value is of the same type
-            if ($reflection->hasProperty($property) && $valueType === $propertyType) {
+            if ($entityReflection->hasProperty($property) && $valueType === $propertyType) {
                 // Set the value of the property
                 $entity->$property = $value;
             }

@@ -43,7 +43,22 @@ class CollectionRepository implements CollectionRepositoryInterface
         $this->table = $table;
         $this->primaryKey = $primaryKey;
         $this->autoIncrement = $autoIncrement;
-        $this->defaultEntities = $defaultEntities;
+        $this->defaultEntities = array_map(
+            function ($data) {
+                static $i = 0;
+                if (!isset($data[$this->primaryKey])) {
+                    if ($this->autoIncrement) {
+                        $data[$this->primaryKey] = $i;
+                        $i++;
+                    } else {
+                        throw new \InvalidArgumentException("Primary key '{$this->primaryKey}' is required.");
+                    }
+                }
+
+                return $data;
+            },
+            $defaultEntities
+        );
     }
 
     private function getPrimaryKeyValue(EntityInterface $entity)
@@ -96,8 +111,11 @@ class CollectionRepository implements CollectionRepositoryInterface
             return $this->cache;
         }
 
-        // Merge the default entities with the found entities
-        $data = get_option($this->table, $this->defaultEntities);
+        $data = get_option($this->table, null);
+
+        if ($data === null && null !== $this->defaultEntities) {
+            $data = $this->defaultEntities;
+        }
 
         $this->cache = $data ? array_values(array_map([$this->mapper, 'toEntity'], $data)) : null;
 
@@ -113,8 +131,22 @@ class CollectionRepository implements CollectionRepositoryInterface
 
     public function deleteAll(): bool
     {
+
+        // Filter entities that do not allow deletion
+        $collection = array_filter($this->findAll() ?? [], function ($entity) {
+            $allowDelete = $entity->get('allowDelete');
+            return !$allowDelete;
+        });
+
+        // If there are no entities that allow deletion, delete the option
+        if (empty($collection)) {
+            $this->cache = null;
+            return delete_option($this->table);
+        }
+        // Otherwise, save the filtered collection
         $this->cache = null;
-        return delete_option($this->table);
+
+        return $this->saveAll($collection);
     }
 
     public function find($primaryKeyValue): ?EntityInterface
@@ -186,6 +218,11 @@ class CollectionRepository implements CollectionRepositoryInterface
 
         $entity = $collection[$index];
 
+        // Check if the entity allows updates, otherwise throw an exception
+        if (isset($this->defaultEntities[$index]['allowUpdate']) && true !== $this->defaultEntities[$index]['allowUpdate']) {
+            throw new \InvalidArgumentException("Entity does not allow updates.");
+        }
+
         $updatedData = array_merge($entity->getProperties(), $data);
         $updatedEntity = $this->mapper->toEntity($updatedData);
 
@@ -211,6 +248,11 @@ class CollectionRepository implements CollectionRepositoryInterface
 
         if (!isset($collection[$index])) {
             return false;
+        }
+
+        // Check if the entity allows updates, otherwise throw an exception
+        if (isset($this->defaultEntities[$index]['allowDelete']) && true !== $this->defaultEntities[$index]['allowDelete']) {
+            throw new \InvalidArgumentException("Entity does not allow deletion.");
         }
 
         // Remove the entity from the collection

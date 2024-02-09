@@ -6,10 +6,34 @@ use function QuadLayers\WP_Orm\Helpers\arrayRecursiveDiff;
 
 abstract class CollectionEntity extends SingleEntity
 {
+    const PRIVATE_PROPERTIES = ['primaryKey','allowDelete', 'allowUpdate'];
+
     /**
      * @var string
      */
     public static $primaryKey;
+    /**
+     * @var bool
+     */
+    private $allowDelete = true;
+    /**
+     * @var bool
+     */
+    private $allowUpdate = true;
+
+    public function get(string $key)
+    {
+        if (property_exists($this, $key)) {
+            return $this->$key;
+        }
+    }
+
+    public function set(string $key, $value): void
+    {
+        if (property_exists($this, $key)) {
+            $this->$key = $value;
+        }
+    }
 
     public function getModifiedProperties(): array
     {
@@ -25,7 +49,7 @@ abstract class CollectionEntity extends SingleEntity
         }
         $properties = $this->getProperties();
 
-        // Compare the current state with the initial state
+        // Compare the current state with the initial state and get the modified properties
         $modifiedProperties = arrayRecursiveDiff($defaults, $properties);
 
         // Return the modified properties
