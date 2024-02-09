@@ -43,7 +43,7 @@ class CollectionRepository implements CollectionRepositoryInterface
         $this->table = $table;
         $this->primaryKey = $primaryKey;
         $this->autoIncrement = $autoIncrement;
-        $this->defaultEntities = array_map(
+        $this->defaultEntities = $defaultEntities ? array_map(
             function ($data) {
                 static $i = 0;
                 if (!isset($data[$this->primaryKey])) {
@@ -58,7 +58,7 @@ class CollectionRepository implements CollectionRepositoryInterface
                 return $data;
             },
             $defaultEntities
-        );
+        ) : null;
     }
 
     private function getPrimaryKeyValue(EntityInterface $entity)
