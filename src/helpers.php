@@ -33,7 +33,7 @@ function getObjectSchema($properties): array
         $type = gettype($default);
         // Add the property to the schema array
         $schema[$propertyName] = [
-            'type' => $type,
+            'type' => $type, //TODO: rename to sanitizeFunction
             'default' => $default
         ];
         if ($type === 'object') {
@@ -41,6 +41,8 @@ function getObjectSchema($properties): array
         } elseif ($type === 'array' && isAssociativeArray($default)) {
             $schema[$propertyName]['properties'] = getObjectSchema($default);
         }
+        //TODO: check if customSanitization[$propertyName] exists and add it to the schema
+        // $schema[$propertyName]['sanitizeFunction'] = $customSanitization[$propertyName];
     }
     // Return the schema array
     return $schema;
@@ -110,7 +112,7 @@ function getSanitizedData($data, array $schema, bool $strict = false)
 
         $value = $data[$key] ?? null;
 
-        switch ($property['type']) {
+        switch ($property['type']) { //TODO: rename to sanitizeFunction
             case 'NULL':
                 $sanitized[$key] = null;
                 break;
@@ -185,6 +187,12 @@ function getSanitizedData($data, array $schema, bool $strict = false)
                 }
                 break;
             default:
+                //TODO: add support for custom sanitization functions
+                // try {
+                //     $sanitized[$key] = $property['sanitizeFunction']($value);
+                // } catch (\Throwable $e) {
+                //     throw new \InvalidArgumentException("Error sanitizing value for key '{$key}': {$e->getMessage()}");
+                // }
                 throw new \InvalidArgumentException("Unsupported type '{$property['type']}' in schema for key '{$key}'");
         }
     }
