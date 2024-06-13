@@ -23,7 +23,7 @@ class SingleRepositoryBuilderTest extends TestCase
 
         $this->testDefaults = [
             'key1' => 'default_value_1',
-            'key2' => 'default_value_2'
+            'key2' => 'default_value_2',
         ];
 
         $this->testValue = [

@@ -191,3 +191,66 @@ function getSanitizedData($data, array $schema, bool $strict = false)
 
     return $sanitized;
 }
+
+function validateProperties(array $data, array $validateProperties = null, $entity = null): void
+    {
+        if (empty($validateProperties)) {
+            return;
+        }
+
+        $entityClass = get_class($entity);
+
+        foreach ($data as $propertyName => $value) {
+            if (isset($validateProperties[$propertyName])) {
+                $validateFunction = $validateProperties[$propertyName];
+                if (is_callable($validateFunction)) {
+                    $validation = call_user_func($validateFunction, $data[$propertyName]);
+                    if (! $validation) {
+                        throw new \Exception(sprintf('Input field %s is invalid', $propertyName), 400);
+                    }
+                } elseif (is_string($validateFunction) && strpos($validateFunction, 'self::') === 0) {
+                    $validateFunction = [$entityClass, substr($validateFunction, 6)];
+                    $validation = call_user_func($validateFunction, $data[$propertyName]);
+                    if (! $validation) {
+                        throw new \Exception(sprintf('Input field %s is invalid', $propertyName), 400);
+                    }
+                } elseif (is_string($validateFunction) && strpos($validateFunction, '$this->') === 0) {
+                    $validateFunction = [$entity, substr($validateFunction, 7)];
+                    $validation = call_user_func($validateFunction, $data[$propertyName]);
+                    if (! $validation) {
+                        throw new \Exception(sprintf('Input field %s is invalid', $propertyName), 400);
+                    }
+                }
+            }
+        }
+    }
+
+function getEntitySanitizedData(array $data, array $sanitizeProperties, $entity, $defaultProperties): array
+{
+    $entitySanitizedData = [];
+    $entityClass = get_class($entity);
+
+    foreach ($defaultProperties as $propertyName => $value) {
+        if (isset($data[$propertyName])) {
+            if ( isset($sanitizeProperties[$propertyName] ) ) {
+                $sanitizeFunction = $sanitizeProperties[$propertyName];
+                if (is_callable($sanitizeFunction)) {
+                    $entitySanitizedData[$propertyName] = call_user_func($sanitizeFunction, $data[$propertyName]);
+                } elseif (is_string($sanitizeFunction) && strpos($sanitizeFunction, 'self::') === 0) {
+                    $sanitizeFunction = [$entityClass, substr($sanitizeFunction, 6)];
+                    $entitySanitizedData[$propertyName] = call_user_func($sanitizeFunction, $data[$propertyName]);
+                } elseif (is_string($sanitizeFunction) && strpos($sanitizeFunction, '$this->') === 0) {
+                    $sanitizeFunction = [$entity, substr($sanitizeFunction, 7)];
+                    $entitySanitizedData[$propertyName] = call_user_func($sanitizeFunction, $data[$propertyName]);
+                } else {
+                    $entitySanitizedData[$propertyName] = $data[$propertyName]; // fallback
+                }
+            } else {
+                $dataValue = array($propertyName => $data[$propertyName]);
+                $defaultValue = array($propertyName => $value);
+                $entitySanitizedData[$propertyName] = getSanitizedData( $dataValue, getObjectSchema($defaultValue))[$propertyName];
+            }
+        }
+    }
+    return $entitySanitizedData;
+}

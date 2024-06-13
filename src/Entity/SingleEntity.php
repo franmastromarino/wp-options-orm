@@ -12,6 +12,16 @@ abstract class SingleEntity implements EntityInterface
     /**
      * @var array|null
      */
+    public static $sanitizeProperties = null;
+    
+    /**
+     * @var array|null
+     */
+    public static $validateProperties = null;
+
+    /**
+     * @var array|null
+     */
     private $defaults = null;
 
     public function get(string $key)
@@ -81,7 +91,7 @@ abstract class SingleEntity implements EntityInterface
         return getObjectVars($this);
     }
 
-    public function getDefaults(): array
+    public function getDefaults(): ?array
     {
         // If defaults have not been set yet
         if ($this->defaults === null) {
@@ -91,5 +101,15 @@ abstract class SingleEntity implements EntityInterface
 
         // Return the defaults array
         return $this->defaults;
+    }
+
+    public function getSanitizeProperties(): ?array
+    {
+        return static::$sanitizeProperties;
+    }
+
+    public function getValidateProperties(): ?array
+    {
+        return static::$validateProperties;
     }
 }

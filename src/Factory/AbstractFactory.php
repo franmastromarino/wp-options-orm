@@ -4,8 +4,8 @@ namespace QuadLayers\WP_Orm\Factory;
 
 use QuadLayers\WP_Orm\Entity\EntityInterface;
 
-use function QuadLayers\WP_Orm\Helpers\getObjectSchema;
-use function QuadLayers\WP_Orm\Helpers\getSanitizedData;
+use function QuadLayers\WP_Orm\Helpers\getEntitySanitizedData;
+use function QuadLayers\WP_Orm\Helpers\validateProperties;
 
 abstract class AbstractFactory
 {
@@ -13,6 +13,11 @@ abstract class AbstractFactory
      * @var string
      */
     private $entityClass;
+
+    /**
+     * @var EntityInterface
+     */
+    private $entity;
 
     public function __construct(string $entityClass)
     {
@@ -22,20 +27,18 @@ abstract class AbstractFactory
     public function create(array $data): EntityInterface
     {
         // Create a new instance of the entity
-        $entity = new $this->entityClass();
+        $this->entity = new $this->entityClass();
 
-        // Get the default values of the entity, new static() is used to get the defaults of the child class
-        $entityDefaults = $entity->getDefaults();
+        $sanitizeProperties = $this->entity->getSanitizeProperties();
+        $defaultProperties = $this->entity->getDefaults();
 
-        $entitySchema = getObjectSchema($entityDefaults);
-
-        $sanitizedData = getSanitizedData($data, $entitySchema);
+        $sanitizedData = getEntitySanitizedData($data, $sanitizeProperties, $this->entity, $defaultProperties);
 
         // Use reflection to get the properties of the class
-        $entityReflection = new \ReflectionClass($entity);
+        $entityReflection = new \ReflectionClass($this->entity);
 
         // Get private properties of the entity
-        $entityPrivates = $entity::PRIVATE_PROPERTIES;
+        $entityPrivates = $this->entity::PRIVATE_PROPERTIES;
 
         // Check if the entity has private properties and update them
         if (count($entityPrivates) > 0) {
@@ -43,22 +46,27 @@ abstract class AbstractFactory
             foreach ($entityPrivates as $propertyName) {
                 if (array_key_exists($propertyName, $data)) {
                     // Set the value of the property
-                    $entity->set($propertyName, $data[$propertyName]);
+                    $this->entity->set($propertyName, $data[$propertyName]);
                 }
             }
         }
 
+        // Validate each property with validateProperty method else throw an exception
+        $validateProperties = $this->entity->getValidateProperties();
+
+        validateProperties($sanitizedData,  $validateProperties, $this->entity);
+
         // Loop through each data item
         foreach ($sanitizedData as $property => $value) {
             $valueType = gettype($value);
-            $propertyType = gettype($entity->$property);
+            $propertyType = gettype($this->entity->$property);
             // Check if the entity has the property and if the value is of the same type
             if ($entityReflection->hasProperty($property) && $valueType === $propertyType) {
                 // Set the value of the property
-                $entity->$property = $value;
+                $this->entity->$property = $value;
             }
         }
 
-        return $entity;
+        return $this->entity;
     }
 }

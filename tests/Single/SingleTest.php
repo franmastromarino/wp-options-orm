@@ -10,11 +10,31 @@ class SingleTest extends TestCase
     public function testGettersAndSetters()
     {
 
-        $entity = new SingleEntityTest();
+        $entity = new SingleEntityTest([
+            'key3' => 'test',
+            'key4' => 'test',
+            'key5' => 'test',
+        ]);
 
         $testValue = $entity->getDefaults();
 
         $this->assertEquals($testValue['key1'], $entity->getKey1());
         $this->assertEquals($testValue['key2'], $entity->getKey2());
+        $this->assertEquals($testValue['key3'], $entity->getKey3());
+        $this->assertEquals($testValue['key4'], $entity->getKey4());
+        $this->assertEquals($entity->sanitizeKey5(), $entity->getKey5());
+    }
+
+    // Test sanitize function
+    public function testSanitize()
+    {
+        $entity = new SingleEntityTest();
+
+        $entity->setKey1('test');
+        $entity->setKey2('test');
+        $entity->setKey3('test');
+
+        $this->assertEquals('test', $entity->getKey1());
+        $this->assertEquals('test', $entity->getKey2());
     }
 }
