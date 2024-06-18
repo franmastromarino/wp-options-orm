@@ -170,24 +170,24 @@ class GetSanitizedDataTest extends TestCase
 
         $this->assertEquals($expected, $result);
     }
-    // public function testGetSanitizedDataWithUnsupportedSanitizeFunction()
-    public function testGetSanitizedDataWithUnsupportedType()
+
+    public function testGetSanitizedDataWithUnsupportedSanitizeFunction()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Unsupported sanitizeFunction 'unsupported_sanitize_function' in schema for key 'unsupported_key'");
+        $this->expectExceptionMessage("Error sanitizing value for key 'test': Call to undefined function unsupported_sanitize_function()");
 
         $data = [
-            'unsupported_key' => '2',
+            'test' => '2',
         ];
 
         $schema = [
-            'unsupported_key' => [
-                'sanitizeFunction' => 'intval',
-                'default' => 'default'
+            'test' => [
+                'sanitizeFunction' => 'unsupported_sanitize_function',
+                'default' => 0
             ],
         ];
 
-        getSanitizedData($data, $schema, false);
+        $result = getSanitizedData($data, $schema, false);
     }
 
     public function testGetSanitizedDataNonStrictWithInvalidNumber()

@@ -195,13 +195,14 @@ function getSanitizedData($data, array $schema, bool $strict = false)
                 // TODO: add support for custom sanitization functions
                 try {
                     error_log( 'sanitized: ' . json_encode( $sanitized, JSON_PRETTY_PRINT ) );
-                    error_log( 'key: ' . json_encode( $key, JSON_PRETTY_PRINT ) );
-                    error_log( 'property: ' . json_encode( $property, JSON_PRETTY_PRINT ) );
-                    error_log( 'value: ' . json_encode( $value, JSON_PRETTY_PRINT ) );
+                    // error_log( 'key: ' . json_encode( $key, JSON_PRETTY_PRINT ) );
+                    // error_log( 'property: ' . json_encode( $property, JSON_PRETTY_PRINT ) );
+                    // error_log( 'value: ' . json_encode( $value, JSON_PRETTY_PRINT ) );
                     $sanitized[$key] = $property['sanitizeFunction']($value);
-                    error_log( 'sanitized: ' . json_encode( $sanitized, JSON_PRETTY_PRINT ) );
+                    // error_log( 'sanitized: ' . json_encode( $sanitized, JSON_PRETTY_PRINT ) );
 
                 } catch (\Throwable $e) {
+                    error_log("Error sanitizing value for key '{$key}': {$e->getMessage()}");
                     throw new \InvalidArgumentException("Error sanitizing value for key '{$key}': {$e->getMessage()}");
                 }
                 // throw new \InvalidArgumentException("Unsupported type '{$property['sanitizeFunction']}' in schema for key '{$key}'");
