@@ -14,54 +14,54 @@ class GetSanitizedDataTest extends TestCase
     {
         $this->schema = [
             'id' => [
-                'type' => 'integer',
+                'sanitizeFunction' => 'integer',
                 'default' => 0
             ],
             'key1' => [
-                'type' => 'string',
+                'sanitizeFunction' => 'string',
                 'default' => 'key1_default_value1'
             ],
             'key2' => [
-                'type' => 'boolean',
+                'sanitizeFunction' => 'boolean',
                 'default' => false
             ],
             'key3' => [
-                'type' => 'object',
+                'sanitizeFunction' => 'object',
                 'default' => (object) [
                     'key3_1' => 'key3_default_value1',
                     'key3_2' => 'key3_default_value2'
                 ],
                 'properties' => [
                     'key3_1' => [
-                        'type' => 'string',
+                        'sanitizeFunction' => 'string',
                         'default' => 'key3_default_value1'
                     ],
                     'key3_2' => [
-                        'type' => 'string',
+                        'sanitizeFunction' => 'string',
                         'default' => 'key3_default_value2'
                     ],
                 ]
             ],
             'key4' => [
-                'type' => 'number',
+                'sanitizeFunction' => 'number',
                 'default' => 1
             ],
             'key5' => [
-                'type' => 'number'
+                'sanitizeFunction' => 'number'
             ],
             'key6' => [
-                'type' => 'array',
+                'sanitizeFunction' => 'array',
                 'default' => [
                     'key6_1' => 'key6_default_value1',
                     'key6_2' => 'key6_default_value2'
                 ],
                 'properties' => [
                     'key6_1' => [
-                        'type' => 'string',
+                        'sanitizeFunction' => 'string',
                         'default' => 'key6_default_value1'
                     ],
                     'key6_2' => [
-                        'type' => 'string',
+                        'sanitizeFunction' => 'string',
                         'default' => 'key6_default_value2'
                     ],
                 ]
@@ -170,18 +170,19 @@ class GetSanitizedDataTest extends TestCase
 
         $this->assertEquals($expected, $result);
     }
+    // public function testGetSanitizedDataWithUnsupportedSanitizeFunction()
     public function testGetSanitizedDataWithUnsupportedType()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Unsupported type 'unsupported_type' in schema for key 'unsupported_key'");
+        $this->expectExceptionMessage("Unsupported sanitizeFunction 'unsupported_sanitize_function' in schema for key 'unsupported_key'");
 
         $data = [
-            'unsupported_key' => 'value',
+            'unsupported_key' => '2',
         ];
 
         $schema = [
             'unsupported_key' => [
-                'type' => 'unsupported_type',
+                'sanitizeFunction' => 'intval',
                 'default' => 'default'
             ],
         ];
@@ -197,7 +198,7 @@ class GetSanitizedDataTest extends TestCase
 
         $schema = [
             'key' => [
-                'type' => 'number',
+                'sanitizeFunction' => 'number',
                 'default' => 0
             ],
         ];
@@ -219,7 +220,7 @@ class GetSanitizedDataTest extends TestCase
 
         $schema = [
             'key' => [
-                'type' => 'number',
+                'sanitizeFunction' => 'number',
                 'default' => 0
             ],
         ];
@@ -239,7 +240,7 @@ class GetSanitizedDataTest extends TestCase
 
         $schema = [
             'key' => [
-                'type' => 'number',
+                'sanitizeFunction' => 'number',
                 'default' => 0
             ],
         ];
@@ -261,7 +262,7 @@ class GetSanitizedDataTest extends TestCase
 
         $schema = [
             'key' => [
-                'type' => 'number',
+                'sanitizeFunction' => 'number',
                 'default' => 0
             ],
         ];
@@ -281,7 +282,7 @@ class GetSanitizedDataTest extends TestCase
 
         $schema = [
             'key' => [
-                'type' => 'boolean',
+                'sanitizeFunction' => 'boolean',
                 'default' => false
             ],
         ];
@@ -303,7 +304,7 @@ class GetSanitizedDataTest extends TestCase
 
         $schema = [
             'key' => [
-                'type' => 'boolean',
+                'sanitizeFunction' => 'boolean',
                 'default' => false
             ],
         ];
@@ -323,11 +324,11 @@ class GetSanitizedDataTest extends TestCase
 
         $schema = [
             'key1' => [
-                'type' => 'string',
+                'sanitizeFunction' => 'string',
                 'default' => 'default1'
             ],
             'key2' => [
-                'type' => 'string',
+                'sanitizeFunction' => 'string',
                 'default' => 'default2'
             ],
         ];
@@ -349,11 +350,11 @@ class GetSanitizedDataTest extends TestCase
 
         $schema = [
             'key1' => [
-                'type' => 'string',
+                'sanitizeFunction' => 'string',
                 'default' => 'default1'
             ],
             'key2' => [
-                'type' => 'string',
+                'sanitizeFunction' => 'string',
                 'default' => 'default2'
             ],
         ];
@@ -368,6 +369,7 @@ class GetSanitizedDataTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    // public function testGetSanitizedDataNonStrictInvalidSanitizeFunction()
     public function testGetSanitizedDataNonStrictInvalidType()
     {
         $data = [
@@ -376,7 +378,7 @@ class GetSanitizedDataTest extends TestCase
 
         $schema = [
             'key' => [
-                'type' => 'number',
+                'sanitizeFunction' => 'number',
                 'default' => 0
             ],
         ];
@@ -393,7 +395,7 @@ class GetSanitizedDataTest extends TestCase
     public function testNonStringValueForStringFieldNonStrict()
     {
         $data = ['key1' => 1];
-        $schema = ['key1' => ['type' => 'string', 'default' => 'default1']];
+        $schema = ['key1' => ['sanitizeFunction' => 'string', 'default' => 'default1']];
 
         $expected = ['key1' => '1'];
 
@@ -403,7 +405,7 @@ class GetSanitizedDataTest extends TestCase
     public function testNonStringValueForStringFieldStrict()
     {
         $data = ['key1' => 1];
-        $schema = ['key1' => ['type' => 'string', 'default' => 'default1']];
+        $schema = ['key1' => ['sanitizeFunction' => 'string', 'default' => 'default1']];
 
         $expected = [];
 
@@ -418,7 +420,7 @@ class GetSanitizedDataTest extends TestCase
 
         $schema = [
             'key1' => [
-                'type' => 'object',
+                'sanitizeFunction' => 'object',
                 'default' => (object) [
                     'key' => 'default'
                 ]
@@ -435,7 +437,7 @@ class GetSanitizedDataTest extends TestCase
     public function testNonObjectValueForObjectFieldStrict()
     {
         $data = ['key1' => 'string'];
-        $schema = ['key1' => ['type' => 'object', 'default' => (object) ['key' => 'default']]];
+        $schema = ['key1' => ['sanitizeFunction' => 'object', 'default' => (object) ['key' => 'default']]];
 
         $expected = [];
 
@@ -445,7 +447,7 @@ class GetSanitizedDataTest extends TestCase
     public function testNonIntegerValueForIntegerFieldNonStrict()
     {
         $data = ['key1' => 'string'];
-        $schema = ['key1' => ['type' => 'integer', 'default' => 0]];
+        $schema = ['key1' => ['sanitizeFunction' => 'integer', 'default' => 0]];
 
         $expected = ['key1' => 0];
 
@@ -455,7 +457,7 @@ class GetSanitizedDataTest extends TestCase
     public function testNonIntegerValueForIntegerFieldStrict()
     {
         $data = ['key1' => 'string'];
-        $schema = ['key1' => ['type' => 'integer', 'default' => 0]];
+        $schema = ['key1' => ['sanitizeFunction' => 'integer', 'default' => 0]];
 
         $expected = [];
 
@@ -465,7 +467,7 @@ class GetSanitizedDataTest extends TestCase
     public function testStringTrueFalseForBooleanFieldNonStrict()
     {
         $data = ['key1' => 'true', 'key2' => 'false'];
-        $schema = ['key1' => ['type' => 'boolean', 'default' => false], 'key2' => ['type' => 'boolean', 'default' => false]];
+        $schema = ['key1' => ['sanitizeFunction' => 'boolean', 'default' => false], 'key2' => ['sanitizeFunction' => 'boolean', 'default' => false]];
 
         $expected = ['key1' => true, 'key2' => false];
 
@@ -475,7 +477,7 @@ class GetSanitizedDataTest extends TestCase
     public function testStringTrueFalseForBooleanFieldStrict()
     {
         $data = ['key1' => 'true', 'key2' => 'false'];
-        $schema = ['key1' => ['type' => 'boolean', 'default' => false], 'key2' => ['type' => 'boolean', 'default' => false]];
+        $schema = ['key1' => ['sanitizeFunction' => 'boolean', 'default' => false], 'key2' => ['sanitizeFunction' => 'boolean', 'default' => false]];
 
         $expected = [];
 
@@ -485,7 +487,7 @@ class GetSanitizedDataTest extends TestCase
     public function testNonBooleanValueForBooleanFieldNonStrict()
     {
         $data = ['key1' => 'string'];
-        $schema = ['key1' => ['type' => 'boolean', 'default' => false]];
+        $schema = ['key1' => ['sanitizeFunction' => 'boolean', 'default' => false]];
 
         $expected = ['key1' => false];
 
@@ -495,7 +497,7 @@ class GetSanitizedDataTest extends TestCase
     public function testNonBooleanValueForBooleanFieldStrict()
     {
         $data = ['key1' => 'string'];
-        $schema = ['key1' => ['type' => 'boolean', 'default' => false]];
+        $schema = ['key1' => ['sanitizeFunction' => 'boolean', 'default' => false]];
 
         $expected = [];
 

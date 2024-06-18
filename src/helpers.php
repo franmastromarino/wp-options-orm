@@ -33,7 +33,7 @@ function getObjectSchema($properties): array
         $type = gettype($default);
         // Add the property to the schema array
         $schema[$propertyName] = [
-            'type' => $type, //TODO: rename to sanitizeFunction
+            'sanitizeFunction' => $type, //TODO: rename to sanitizeFunction
             'default' => $default
         ];
         if ($type === 'object') {
@@ -43,6 +43,11 @@ function getObjectSchema($properties): array
         }
         //TODO: check if customSanitization[$propertyName] exists and add it to the schema
         // $schema[$propertyName]['sanitizeFunction'] = $customSanitization[$propertyName];
+        if (isset($customSanitization[$propertyName])) {
+            error_log( 'schema: ' . json_encode( $schema, JSON_PRETTY_PRINT ) );
+            error_log( 'propertyName: ' . json_encode( $propertyName, JSON_PRETTY_PRINT ) );
+            $schema[$propertyName]['sanitizeFunction'] = $customSanitization[$propertyName];
+        }
     }
     // Return the schema array
     return $schema;
@@ -100,7 +105,7 @@ function getSanitizedData($data, array $schema, bool $strict = false)
 
     $sanitized = [];
     foreach ($schema as $key => $property) {
-        if (!isset($data[$key]) || ($strict && gettype($data[$key]) !== $property['type'])) {
+        if (!isset($data[$key]) || ($strict && gettype($data[$key]) !== $property['sanitizeFunction'])) {
             if (!$strict) {
                 // Check if default is set before assigning.
                 if (array_key_exists('default', $property)) {
@@ -112,7 +117,7 @@ function getSanitizedData($data, array $schema, bool $strict = false)
 
         $value = $data[$key] ?? null;
 
-        switch ($property['type']) { //TODO: rename to sanitizeFunction
+        switch ($property['sanitizeFunction']) { //TODO: rename to sanitizeFunction
             case 'NULL':
                 $sanitized[$key] = null;
                 break;
@@ -187,13 +192,19 @@ function getSanitizedData($data, array $schema, bool $strict = false)
                 }
                 break;
             default:
-                //TODO: add support for custom sanitization functions
-                // try {
-                //     $sanitized[$key] = $property['sanitizeFunction']($value);
-                // } catch (\Throwable $e) {
-                //     throw new \InvalidArgumentException("Error sanitizing value for key '{$key}': {$e->getMessage()}");
-                // }
-                throw new \InvalidArgumentException("Unsupported type '{$property['type']}' in schema for key '{$key}'");
+                // TODO: add support for custom sanitization functions
+                try {
+                    error_log( 'sanitized: ' . json_encode( $sanitized, JSON_PRETTY_PRINT ) );
+                    error_log( 'key: ' . json_encode( $key, JSON_PRETTY_PRINT ) );
+                    error_log( 'property: ' . json_encode( $property, JSON_PRETTY_PRINT ) );
+                    error_log( 'value: ' . json_encode( $value, JSON_PRETTY_PRINT ) );
+                    $sanitized[$key] = $property['sanitizeFunction']($value);
+                    error_log( 'sanitized: ' . json_encode( $sanitized, JSON_PRETTY_PRINT ) );
+
+                } catch (\Throwable $e) {
+                    throw new \InvalidArgumentException("Error sanitizing value for key '{$key}': {$e->getMessage()}");
+                }
+                // throw new \InvalidArgumentException("Unsupported type '{$property['sanitizeFunction']}' in schema for key '{$key}'");
         }
     }
 
