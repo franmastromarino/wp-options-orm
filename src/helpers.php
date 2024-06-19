@@ -23,28 +23,28 @@ function getObjectVars($object)
     return $vars;
 }
 
-function getObjectSchema($properties): array
+//validateProperties
+
+function getObjectSchema($properties, $validateProperties = null): array
 {
     // Initialize the defaults array
     $schema = [];
+
     // Iterate over each public property
-    foreach ($properties as $propertyName => $default) {
+    foreach ($properties as $propertyName => $value) {
         // Get the type and default value of the property
-        $type = gettype($default);
+        $type = gettype($value);
         // Add the property to the schema array
         $schema[$propertyName] = [
             'sanitizeFunction' => $type, //TODO: rename to sanitizeFunction
-            'default' => $default
+            'default' => $value
         ];
-        if ($type === 'object') {
-            $schema[$propertyName]['properties'] = getObjectSchema((array) $default);
-        } elseif ($type === 'array' && isAssociativeArray($default)) {
-            $schema[$propertyName]['properties'] = getObjectSchema($default);
-        }
-        //TODO: check if customSanitization[$propertyName] exists and add it to the schema
-        // $schema[$propertyName]['sanitizeFunction'] = $customSanitization[$propertyName];
-        if (isset($customSanitization[$propertyName])) {
-            $schema[$propertyName]['sanitizeFunction'] = $customSanitization[$propertyName];
+
+        // Check if validateProperties is set and if the property has a custom sanitization function
+        if (is_array($validateProperties) && isset($validateProperties[$propertyName])) {
+            $schema[$propertyName]['sanitizeFunction'] = $validateProperties[$propertyName];
+        } elseif ($type === 'object' || $type === 'array' && isAssociativeArray($value)) {
+            $schema[$propertyName]['properties'] = getObjectSchema((array) $value);
         }
     }
     // Return the schema array

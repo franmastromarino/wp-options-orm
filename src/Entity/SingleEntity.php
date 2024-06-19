@@ -7,7 +7,12 @@ use function QuadLayers\WP_Orm\Helpers\getObjectVars;
 
 abstract class SingleEntity implements EntityInterface
 {
-    const PRIVATE_PROPERTIES = [];
+    const PRIVATE_PROPERTIES = ['validateProperties'];
+
+    /**
+     * @var array|null
+     */
+    public static $validateProperties = null;
 
     /**
      * @var array|null
@@ -81,7 +86,7 @@ abstract class SingleEntity implements EntityInterface
         return getObjectVars($this);
     }
 
-    public function getDefaults(): array
+    public function getDefaults(): ?array
     {
         // If defaults have not been set yet
         if ($this->defaults === null) {
@@ -91,5 +96,10 @@ abstract class SingleEntity implements EntityInterface
 
         // Return the defaults array
         return $this->defaults;
+    }
+
+    public function getValidateProperties(): ?array
+    {
+        return static::$validateProperties;
     }
 }
