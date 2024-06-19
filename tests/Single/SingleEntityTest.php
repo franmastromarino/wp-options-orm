@@ -6,4 +6,8 @@ class SingleEntityTest extends \QuadLayers\WP_Orm\Entity\SingleEntity
 {
     public string $key1 = 'default_value_1';
     public string $key2 = 'default_value_2';
+    public array $sanitize_functions = [
+        'key1' => 'string',
+        'key2' => 'string',
+    ];
 }
