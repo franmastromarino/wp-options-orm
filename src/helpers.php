@@ -36,7 +36,7 @@ function getObjectSchema($properties, $validateProperties = null): array
         $type = gettype($value);
         // Add the property to the schema array
         $schema[$propertyName] = [
-            'sanitizeFunction' => $type, //TODO: rename to sanitizeFunction
+            'sanitizeFunction' => $type,
             'default' => $value
         ];
 
@@ -115,7 +115,7 @@ function getSanitizedData($data, array $schema, bool $strict = false)
 
         $value = $data[$key] ?? null;
 
-        switch ($property['sanitizeFunction']) { //TODO: rename to sanitizeFunction
+        switch ($property['sanitizeFunction']) {
             case 'NULL':
                 $sanitized[$key] = null;
                 break;
@@ -190,7 +190,6 @@ function getSanitizedData($data, array $schema, bool $strict = false)
                 }
                 break;
             default:
-                // TODO: add support for custom sanitization functions
                 try {
                     $sanitized[$key] = $property['sanitizeFunction']($value);
                 } catch (\Throwable $e) {
