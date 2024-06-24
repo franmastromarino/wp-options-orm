@@ -4,7 +4,7 @@ namespace QuadLayers\WP_Orm\Tests\Single;
 
 class SingleEntityTest extends \QuadLayers\WP_Orm\Entity\SingleEntity
 {
-    public static $validateProperties = [
+    public static $sanitizeProperties = [
         'key1' => 'string',
         'key2' => 'string',
     ];

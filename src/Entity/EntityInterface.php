@@ -9,5 +9,5 @@ interface EntityInterface
     public function getProperties(): array;
     public function getDefaults(): ?array;
     public function getModifiedProperties(): array;
-    public function getValidateProperties(): ?array;
+    public function getSanitizeProperties(): ?array;
 }

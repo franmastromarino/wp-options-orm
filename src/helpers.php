@@ -23,9 +23,7 @@ function getObjectVars($object)
     return $vars;
 }
 
-//validateProperties
-
-function getObjectSchema($properties, $validateProperties = null): array
+function getObjectSchema($properties, $sanitizeProperties = null): array
 {
     // Initialize the defaults array
     $schema = [];
@@ -40,9 +38,9 @@ function getObjectSchema($properties, $validateProperties = null): array
             'default' => $value
         ];
 
-        // Check if validateProperties is set and if the property has a custom sanitization function
-        if (is_array($validateProperties) && isset($validateProperties[$propertyName])) {
-            $schema[$propertyName]['sanitizeFunction'] = $validateProperties[$propertyName];
+        // Check if sanitizeProperties is set and if the property has a custom sanitization function
+        if (is_array($sanitizeProperties) && isset($sanitizeProperties[$propertyName])) {
+            $schema[$propertyName]['sanitizeFunction'] = $sanitizeProperties[$propertyName];
         } elseif ($type === 'object' || $type === 'array' && isAssociativeArray($value)) {
             $schema[$propertyName]['properties'] = getObjectSchema((array) $value);
         }

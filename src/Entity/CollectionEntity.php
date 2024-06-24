@@ -6,7 +6,7 @@ use function QuadLayers\WP_Orm\Helpers\arrayRecursiveDiff;
 
 abstract class CollectionEntity extends SingleEntity
 {
-    const PRIVATE_PROPERTIES = ['primaryKey','allowDelete', 'allowUpdate', 'validateProperties'];
+    const PRIVATE_PROPERTIES = ['primaryKey','allowDelete', 'allowUpdate', 'sanitizeProperties'];
 
     /**
      * @var string

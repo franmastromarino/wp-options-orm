@@ -27,9 +27,9 @@ abstract class AbstractFactory
         // Get the default values of the entity, new static() is used to get the defaults of the child class
         $entityDefaults = $entity->getDefaults();
 
-        $entityValidateProperties = $entity->getValidateProperties();
+        $entitySanitizeProperties = $entity->getSanitizeProperties();
 
-        $entitySchema = getObjectSchema($entityDefaults, $entityValidateProperties);
+        $entitySchema = getObjectSchema($entityDefaults, $entitySanitizeProperties);
 
         $sanitizedData = getSanitizedData($data, $entitySchema);
 
