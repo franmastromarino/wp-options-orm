@@ -23,26 +23,23 @@ function getObjectVars($object)
     return $vars;
 }
 
-function getObjectSchema($properties, $sanitizeProperties = null): array
+function getObjectSchema($properties): array
 {
     // Initialize the defaults array
     $schema = [];
-
     // Iterate over each public property
-    foreach ($properties as $propertyName => $value) {
+    foreach ($properties as $propertyName => $default) {
         // Get the type and default value of the property
-        $type = gettype($value);
+        $type = gettype($default);
         // Add the property to the schema array
         $schema[$propertyName] = [
-            'sanitizeFunction' => $type,
-            'default' => $value
+            'type' => $type,
+            'default' => $default
         ];
-
-        // Check if sanitizeProperties is set and if the property has a custom sanitization function
-        if (is_array($sanitizeProperties) && isset($sanitizeProperties[$propertyName])) {
-            $schema[$propertyName]['sanitizeFunction'] = $sanitizeProperties[$propertyName];
-        } elseif ($type === 'object' || $type === 'array' && isAssociativeArray($value)) {
-            $schema[$propertyName]['properties'] = getObjectSchema((array) $value);
+        if ($type === 'object') {
+            $schema[$propertyName]['properties'] = getObjectSchema((array) $default);
+        } elseif ($type === 'array' && isAssociativeArray($default)) {
+            $schema[$propertyName]['properties'] = getObjectSchema($default);
         }
     }
     // Return the schema array
@@ -101,7 +98,7 @@ function getSanitizedData($data, array $schema, bool $strict = false)
 
     $sanitized = [];
     foreach ($schema as $key => $property) {
-        if (!isset($data[$key]) || ($strict && gettype($data[$key]) !== $property['sanitizeFunction'])) {
+        if (!isset($data[$key]) || ($strict && gettype($data[$key]) !== $property['type'])) {
             if (!$strict) {
                 // Check if default is set before assigning.
                 if (array_key_exists('default', $property)) {
@@ -113,7 +110,7 @@ function getSanitizedData($data, array $schema, bool $strict = false)
 
         $value = $data[$key] ?? null;
 
-        switch ($property['sanitizeFunction']) {
+        switch ($property['type']) {
             case 'NULL':
                 $sanitized[$key] = null;
                 break;
@@ -188,12 +185,7 @@ function getSanitizedData($data, array $schema, bool $strict = false)
                 }
                 break;
             default:
-                try {
-                    $sanitized[$key] = $property['sanitizeFunction']($value);
-                } catch (\Throwable $e) {
-                    throw new \InvalidArgumentException("Error sanitizing value for key '{$key}': {$e->getMessage()}");
-                }
-                break;
+                throw new \InvalidArgumentException("Unsupported type '{$property['type']}' in schema for key '{$key}'");
         }
     }
 

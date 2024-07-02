@@ -7,7 +7,7 @@ use function QuadLayers\WP_Orm\Helpers\getObjectVars;
 
 abstract class SingleEntity implements EntityInterface
 {
-    const PRIVATE_PROPERTIES = ['sanitizeProperties'];
+    const PRIVATE_PROPERTIES = [];
 
     /**
      * @var array|null

@@ -24,12 +24,6 @@ class SingleRepositoryBuilder
         return $this;
     }
 
-    public function setGroup(string $group): self
-    {
-        $this->group = $group;
-        return $this;
-    }
-
     public function setEntity(string $entityClass): self
     {
         if (!class_exists($entityClass)) {

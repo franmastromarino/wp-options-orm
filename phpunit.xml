@@ -7,9 +7,6 @@
         <testsuite name="WP ORM Test Suite">
             <directory>./tests</directory>
         </testsuite>
-         <testsuite name="helpers">
-            <directory>./tests/Helpers</directory>
-        </testsuite>
          <testsuite name="collection">
             <directory>./tests/Collection/CollectionRepositoryBuilderTest.php</directory>
             <directory>./tests/Collection/CollectionRepositoryBuilderTestDefaultEntities.php</directory>
