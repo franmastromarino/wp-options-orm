@@ -67,7 +67,7 @@ abstract class AbstractFactory
 
         $entitySanitizeProperties = $this->entity->getSanitizeProperties();
 
-        if (is_null($entitySanitizeProperties)) {
+        if (is_null($entitySanitizeProperties) || empty($entitySanitizeProperties)) {
             return getSanitizedData($data, getObjectSchema($this->entity->getDefaults(), $entitySanitizeProperties));
         }
 
