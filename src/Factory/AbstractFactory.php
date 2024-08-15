@@ -67,24 +67,29 @@ abstract class AbstractFactory
 
         $entitySanitizeProperties = $this->entity->getSanitizeProperties();
 
-        if (is_null($entitySanitizeProperties) || empty($entitySanitizeProperties)) {
-            return getSanitizedData($data, getObjectSchema($this->entity->getDefaults(), $entitySanitizeProperties));
-        }
+        $defaultProperties = $this->entity->getDefaults();
 
         $entitySanitizedData = [];
 
-        foreach ($entitySanitizeProperties as $key => $sanitizeFunction) {
-            if (isset($data[$key])) {
-                if (is_callable($sanitizeFunction)) {
-                    $entitySanitizedData[$key] = call_user_func($sanitizeFunction, $data[$key]);
-                } elseif (is_string($sanitizeFunction) && strpos($sanitizeFunction, 'self::') === 0) {
-                    $sanitizeFunction = [$this->entityClass, substr($sanitizeFunction, 6)];
-                    $entitySanitizedData[$key] = call_user_func($sanitizeFunction, $data[$key]);
-                } elseif (is_string($sanitizeFunction) && strpos($sanitizeFunction, '$this->') === 0) {
-                    $sanitizeFunction = [$this->entity, substr($sanitizeFunction, 7)];
-                    $entitySanitizedData[$key] = call_user_func($sanitizeFunction, $data[$key]);
+        foreach ($defaultProperties as $property => $value) {
+            if (isset($data[$property])) {
+                if (! empty(isset($entitySanitizeProperties) && isset($entitySanitizeProperties[$property]))) {
+                    $sanitizeFunction = $entitySanitizeProperties[$property];
+                    if (is_callable($sanitizeFunction)) {
+                        $entitySanitizedData[$property] = call_user_func($sanitizeFunction, $data[$property]);
+                    } elseif (is_string($sanitizeFunction) && strpos($sanitizeFunction, 'self::') === 0) {
+                        $sanitizeFunction = [$this->entityClass, substr($sanitizeFunction, 6)];
+                        $entitySanitizedData[$property] = call_user_func($sanitizeFunction, $data[$property]);
+                    } elseif (is_string($sanitizeFunction) && strpos($sanitizeFunction, '$this->') === 0) {
+                        $sanitizeFunction = [$this->entity, substr($sanitizeFunction, 7)];
+                        $entitySanitizedData[$property] = call_user_func($sanitizeFunction, $data[$property]);
+                    } else {
+                        $entitySanitizedData[$property] = $data[$property]; // fallback
+                    }
                 } else {
-                    $entitySanitizedData[$key] = $data[$key]; // fallback
+                    $value = getSanitizedData($data, getObjectSchema($this->entity->getDefaults()))[$property];
+
+                    $entitySanitizedData[$property] = getSanitizedData($data, getObjectSchema($this->entity->getDefaults()))[$property];
                 }
             }
         }
