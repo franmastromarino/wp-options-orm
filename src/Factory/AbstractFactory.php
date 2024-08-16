@@ -89,7 +89,7 @@ abstract class AbstractFactory
                 } else {
                     $dataValue = array($propertyName => $data[$propertyName]);
                     $defaultValue = array($propertyName => $this->entity->getDefaults()[$propertyName]);
-                    $entitySanitizedData[$propertyName] = getSanitizedData( $dataValue, getObjectSchema($defaultValue));
+                    $entitySanitizedData[$propertyName] = getSanitizedData( $dataValue, getObjectSchema($defaultValue))[$propertyName];
                 }
             }
         }
