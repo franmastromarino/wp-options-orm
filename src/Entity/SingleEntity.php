@@ -13,6 +13,11 @@ abstract class SingleEntity implements EntityInterface
      * @var array|null
      */
     public static $sanitizeProperties = null;
+    
+    /**
+     * @var array|null
+     */
+    public static $validateProperties = null;
 
     /**
      * @var array|null
@@ -101,5 +106,10 @@ abstract class SingleEntity implements EntityInterface
     public function getSanitizeProperties(): ?array
     {
         return static::$sanitizeProperties;
+    }
+
+    public function getValidateProperties(): ?array
+    {
+        return static::$validateProperties;
     }
 }

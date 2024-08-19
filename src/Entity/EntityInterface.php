@@ -12,4 +12,5 @@ interface EntityInterface
     public function getDefaults(): ?array;
     public function getModifiedProperties(): array;
     public function getSanitizeProperties(): ?array;
+    public function getValidateProperties(): ?array;
 }
