@@ -49,7 +49,7 @@ abstract class AbstractFactory
         }
 
         // Validate each property with validateProperty method else throw an exception
-        $this->validateProperties( $sanitizedData, $this->entity->getValidateProperties() );
+        $this->validateProperties($sanitizedData);
 
         // Loop through each data item
         foreach ($sanitizedData as $property => $value) {
@@ -65,33 +65,33 @@ abstract class AbstractFactory
         return $this->entity;
     }
 
-    private function validateProperties( $properties, $validateProperties ) : void
+    private function validateProperties($data): void
     {
-        if ( ! $validateProperties || empty($validateProperties) ) {
+        $validateProperties = $this->entity->getValidateProperties();
+
+        if (! $validateProperties || empty($validateProperties)) {
             return;
         }
 
-        foreach ($properties as $propertyName) {
+        foreach ($data as $propertyName => $value) {
             if (isset($validateProperties[$propertyName])) {
                 $validateFunction = $validateProperties[$propertyName];
                 if (is_callable($validateFunction)) {
-                    $validation = call_user_func($validateFunction, $this->entity->$propertyName);
-                    if ( ! $validation ) {
-                        throw new \Exception( sprintf( 'Input field %s is invalid', $propertyName ), 400 );
+                    $validation = call_user_func($validateFunction, $data[$propertyName]);
+                    if (! $validation) {
+                        throw new \Exception(sprintf('Input field %s is invalid', $propertyName), 400);
                     }
                 } elseif (is_string($validateFunction) && strpos($validateFunction, 'self::') === 0) {
                     $validateFunction = [$this->entityClass, substr($validateFunction, 6)];
-                    $validation = call_user_func($validateFunction, $this->entity->$propertyName);
-                    if ( ! $validation ) {
-                        throw new \Exception( sprintf( 'Input field %s is invalid', $propertyName ), 400 );
-
+                    $validation = call_user_func($validateFunction, $data[$propertyName]);
+                    if (! $validation) {
+                        throw new \Exception(sprintf('Input field %s is invalid', $propertyName), 400);
                     }
                 } elseif (is_string($validateFunction) && strpos($validateFunction, '$this->') === 0) {
                     $validateFunction = [$this->entity, substr($validateFunction, 7)];
-                    $validation = call_user_func($validateFunction, $this->entity->$propertyName);
-                    if ( ! $validation ) {
-                        throw new \Exception( sprintf( 'Input field %s is invalid', $propertyName ), 400 );
-
+                    $validation = call_user_func($validateFunction, $data[$propertyName]);
+                    if (! $validation) {
+                        throw new \Exception(sprintf('Input field %s is invalid', $propertyName), 400);
                     }
                 }
             }
