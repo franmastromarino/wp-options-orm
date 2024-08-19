@@ -65,7 +65,7 @@ abstract class AbstractFactory
         return $this->entity;
     }
 
-    private function validateProperties(array $properties, array $validateProperties) : void
+    private function validateProperties( $properties, $validateProperties ) : void
     {
         if ( ! $validateProperties || empty($validateProperties) ) {
             return;
