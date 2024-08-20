@@ -69,7 +69,7 @@ abstract class AbstractFactory
     {
         $validateProperties = $this->entity->getValidateProperties();
 
-        if (! $validateProperties || empty($validateProperties)) {
+        if (empty($validateProperties)) {
             return;
         }
 
