@@ -4,8 +4,8 @@ namespace QuadLayers\WP_Orm\Factory;
 
 use QuadLayers\WP_Orm\Entity\EntityInterface;
 
-use function QuadLayers\WP_Orm\Helpers\getObjectSchema;
-use function QuadLayers\WP_Orm\Helpers\getSanitizedData;
+use function QuadLayers\WP_Orm\Helpers\getEntitySanitizedData;
+use function QuadLayers\WP_Orm\Helpers\validateProperties;
 
 abstract class AbstractFactory
 {
@@ -29,7 +29,10 @@ abstract class AbstractFactory
         // Create a new instance of the entity
         $this->entity = new $this->entityClass();
 
-        $sanitizedData = $this->getEntitySanitizedData($data);
+        $sanitizeProperties = $this->entity->getSanitizeProperties();
+        $defaultProperties = $this->entity->getDefaults();
+
+        $sanitizedData = getEntitySanitizedData($data, $sanitizeProperties, $this->entity, $this->entityClass, $defaultProperties);
 
         // Use reflection to get the properties of the class
         $entityReflection = new \ReflectionClass($this->entity);
@@ -49,7 +52,9 @@ abstract class AbstractFactory
         }
 
         // Validate each property with validateProperty method else throw an exception
-        $this->validateProperties($sanitizedData);
+        $validateProperties = $this->entity->getValidateProperties();
+
+        validateProperties($sanitizedData,  $validateProperties, $this->entity, $this->entityClass);
 
         // Loop through each data item
         foreach ($sanitizedData as $property => $value) {
@@ -63,72 +68,5 @@ abstract class AbstractFactory
         }
 
         return $this->entity;
-    }
-
-    private function validateProperties($data): void
-    {
-        $validateProperties = $this->entity->getValidateProperties();
-
-        if (empty($validateProperties)) {
-            return;
-        }
-
-        foreach ($data as $propertyName => $value) {
-            if (isset($validateProperties[$propertyName])) {
-                $validateFunction = $validateProperties[$propertyName];
-                if (is_callable($validateFunction)) {
-                    $validation = call_user_func($validateFunction, $data[$propertyName]);
-                    if (! $validation) {
-                        throw new \Exception(sprintf('Input field %s is invalid', $propertyName), 400);
-                    }
-                } elseif (is_string($validateFunction) && strpos($validateFunction, 'self::') === 0) {
-                    $validateFunction = [$this->entityClass, substr($validateFunction, 6)];
-                    $validation = call_user_func($validateFunction, $data[$propertyName]);
-                    if (! $validation) {
-                        throw new \Exception(sprintf('Input field %s is invalid', $propertyName), 400);
-                    }
-                } elseif (is_string($validateFunction) && strpos($validateFunction, '$this->') === 0) {
-                    $validateFunction = [$this->entity, substr($validateFunction, 7)];
-                    $validation = call_user_func($validateFunction, $data[$propertyName]);
-                    if (! $validation) {
-                        throw new \Exception(sprintf('Input field %s is invalid', $propertyName), 400);
-                    }
-                }
-            }
-        }
-    }
-
-    private function getEntitySanitizedData(array $data): array
-    {
-
-        $entitySanitizeProperties = $this->entity->getSanitizeProperties();
-
-        $defaultProperties = $this->entity->getDefaults();
-
-        $entitySanitizedData = [];
-
-        foreach ($defaultProperties as $propertyName => $value) {
-            if (isset($data[$propertyName])) {
-                if ( isset($entitySanitizeProperties[$propertyName] ) ) {
-                    $sanitizeFunction = $entitySanitizeProperties[$propertyName];
-                    if (is_callable($sanitizeFunction)) {
-                        $entitySanitizedData[$propertyName] = call_user_func($sanitizeFunction, $data[$propertyName]);
-                    } elseif (is_string($sanitizeFunction) && strpos($sanitizeFunction, 'self::') === 0) {
-                        $sanitizeFunction = [$this->entityClass, substr($sanitizeFunction, 6)];
-                        $entitySanitizedData[$propertyName] = call_user_func($sanitizeFunction, $data[$propertyName]);
-                    } elseif (is_string($sanitizeFunction) && strpos($sanitizeFunction, '$this->') === 0) {
-                        $sanitizeFunction = [$this->entity, substr($sanitizeFunction, 7)];
-                        $entitySanitizedData[$propertyName] = call_user_func($sanitizeFunction, $data[$propertyName]);
-                    } else {
-                        $entitySanitizedData[$propertyName] = $data[$propertyName]; // fallback
-                    }
-                } else {
-                    $dataValue = array($propertyName => $data[$propertyName]);
-                    $defaultValue = array($propertyName => $this->entity->getDefaults()[$propertyName]);
-                    $entitySanitizedData[$propertyName] = getSanitizedData( $dataValue, getObjectSchema($defaultValue))[$propertyName];
-                }
-            }
-        }
-        return $entitySanitizedData;
     }
 }
