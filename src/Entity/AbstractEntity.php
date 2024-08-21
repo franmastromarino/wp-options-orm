@@ -5,7 +5,7 @@ namespace QuadLayers\WP_Orm\Entity;
 use function QuadLayers\WP_Orm\Helpers\getEntitySanitizedData;
 use function QuadLayers\WP_Orm\Helpers\validateProperties;
 
-abstract class AbstractEntity
+abstract class AbstractEntity extends SingleEntity
 {
     public static $sanitizeProperties = [];
     public static $validateProperties = [];
