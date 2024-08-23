@@ -13,10 +13,10 @@ abstract class AbstractEntity extends SingleEntity
         $defaultProperties = get_object_vars($this);
 
         // Sanitize each property with sanitizeProperty method else throw an exception
-        $sanitizedProperties = getEntitySanitizedData($entityProperties, static::$sanitizeProperties, $this, get_class($this), $defaultProperties);
+        $sanitizedProperties = getEntitySanitizedData($entityProperties, static::$sanitizeProperties, $this, $defaultProperties);
         
         // Validate each property with validateProperty method else throw an exception
-        validateProperties($sanitizedProperties, static::$validateProperties, $this, get_class($this));
+        validateProperties($sanitizedProperties, static::$validateProperties, $this);
 
         foreach ($sanitizedProperties as $property => $value) {
             $this->$property = $value;

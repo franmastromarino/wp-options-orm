@@ -192,11 +192,13 @@ function getSanitizedData($data, array $schema, bool $strict = false)
     return $sanitized;
 }
 
-function validateProperties(array $data, array $validateProperties = null, $entity = null, $entityClass = null ): void
+function validateProperties(array $data, array $validateProperties = null, $entity = null): void
     {
         if (empty($validateProperties)) {
             return;
         }
+
+        $entityClass = get_class($entity);
 
         foreach ($data as $propertyName => $value) {
             if (isset($validateProperties[$propertyName])) {
@@ -223,9 +225,10 @@ function validateProperties(array $data, array $validateProperties = null, $enti
         }
     }
 
-function getEntitySanitizedData(array $data, array $sanitizeProperties, $entity, $entityClass, $defaultProperties): array
+function getEntitySanitizedData(array $data, array $sanitizeProperties, $entity, $defaultProperties): array
 {
     $entitySanitizedData = [];
+    $entityClass = get_class($entity);
 
     foreach ($defaultProperties as $propertyName => $value) {
         if (isset($data[$propertyName])) {

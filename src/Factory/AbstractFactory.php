@@ -32,7 +32,7 @@ abstract class AbstractFactory
         $sanitizeProperties = $this->entity->getSanitizeProperties();
         $defaultProperties = $this->entity->getDefaults();
 
-        $sanitizedData = getEntitySanitizedData($data, $sanitizeProperties, $this->entity, $this->entityClass, $defaultProperties);
+        $sanitizedData = getEntitySanitizedData($data, $sanitizeProperties, $this->entity, $defaultProperties);
 
         // Use reflection to get the properties of the class
         $entityReflection = new \ReflectionClass($this->entity);
@@ -54,7 +54,7 @@ abstract class AbstractFactory
         // Validate each property with validateProperty method else throw an exception
         $validateProperties = $this->entity->getValidateProperties();
 
-        validateProperties($sanitizedData,  $validateProperties, $this->entity, $this->entityClass);
+        validateProperties($sanitizedData,  $validateProperties, $this->entity);
 
         // Loop through each data item
         foreach ($sanitizedData as $property => $value) {
