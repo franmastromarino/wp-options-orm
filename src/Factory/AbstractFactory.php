@@ -5,7 +5,7 @@ namespace QuadLayers\WP_Orm\Factory;
 use QuadLayers\WP_Orm\Entity\EntityInterface;
 
 use function QuadLayers\WP_Orm\Helpers\getEntitySanitizedData;
-use function QuadLayers\WP_Orm\Helpers\validateProperties;
+use function QuadLayers\WP_Orm\Helpers\entityValidateProperties;
 
 abstract class AbstractFactory
 {
@@ -24,15 +24,10 @@ abstract class AbstractFactory
         $this->entityClass = $entityClass;
     }
 
-    public function create(array $data): EntityInterface
+    public function create(array $data): ?EntityInterface
     {
         // Create a new instance of the entity
         $this->entity = new $this->entityClass();
-
-        $sanitizeProperties = $this->entity->getSanitizeProperties();
-        $defaultProperties = $this->entity->getDefaults();
-
-        $sanitizedData = getEntitySanitizedData($data, $sanitizeProperties, $this->entity, $defaultProperties);
 
         // Use reflection to get the properties of the class
         $entityReflection = new \ReflectionClass($this->entity);
@@ -51,13 +46,12 @@ abstract class AbstractFactory
             }
         }
 
-        // Validate each property with validateProperty method else throw an exception
-        $validateProperties = $this->entity->getValidateProperties();
+        $sanitizedProperties = getEntitySanitizedData($data, $this->entity);
 
-        validateProperties($sanitizedData,  $validateProperties, $this->entity);
+        entityValidateProperties($sanitizedProperties, $this->entity);
 
         // Loop through each data item
-        foreach ($sanitizedData as $property => $value) {
+        foreach ($sanitizedProperties as $property => $value) {
             $valueType = gettype($value);
             $propertyType = gettype($this->entity->$property);
             // Check if the entity has the property and if the value is of the same type

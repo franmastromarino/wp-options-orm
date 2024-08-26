@@ -13,7 +13,7 @@ abstract class SingleEntity implements EntityInterface
      * @var array|null
      */
     public static $sanitizeProperties = null;
-    
+
     /**
      * @var array|null
      */

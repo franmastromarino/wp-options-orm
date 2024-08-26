@@ -63,6 +63,6 @@
 		"build": "composer install --no-dev && composer dump-autoload -o --no-dev",
 		"phpcs:report:csv": "./vendor/bin/phpcs --warning-severity=0 --extensions=php --report=csv --report-file=./phpcs_error.csv ./src",
 		"phpcs:report:txt": "./vendor/bin/phpcs --warning-severity=0 --extensions=php --report-file=./phpcs_error.txt ./src",
-		"phpcs:report:autofix": "./vendor/bin/phpcbf ./src"
+		"format": "./vendor/bin/phpcbf ./src"
 	}
 }
