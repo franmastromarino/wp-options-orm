@@ -143,8 +143,6 @@ class CollectionRepository implements CollectionRepositoryInterface
             $this->cache = null;
             return delete_option($this->table);
         }
-        // Otherwise, save the filtered collection
-        $this->cache = null;
 
         return $this->saveAll($collection);
     }
@@ -264,5 +262,10 @@ class CollectionRepository implements CollectionRepositoryInterface
     public function getTable(): string
     {
         return $this->table;
+    }
+
+    public function getCache(): ?array
+    {
+        return $this->cache;
     }
 }
