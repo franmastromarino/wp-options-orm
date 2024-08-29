@@ -4,7 +4,7 @@ namespace QuadLayers\WP_Orm\Helpers;
 
 function isAssociativeArray(array $array): bool
 {
-    if (array() === $array) {
+    if ([] === $array) {
         return false;
     }
     return array_keys($array) !== range(0, count($array) - 1);
@@ -56,7 +56,7 @@ function getObjectSchema($properties): array
  */
 function arrayRecursiveDiff($array1, $array2)
 {
-    $result = array();
+    $result = [];
 
     foreach ($array2 as $key => $value) {
         // Condition 1: Check if the key doesn't exist in $array1 or if the values are not equal
