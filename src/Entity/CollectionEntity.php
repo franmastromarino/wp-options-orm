@@ -4,6 +4,7 @@ namespace QuadLayers\WP_Orm\Entity;
 
 use function QuadLayers\WP_Orm\Helpers\arrayRecursiveDiff;
 use function QuadLayers\WP_Orm\Helpers\getSanitizeValue;
+use function QuadLayers\WP_Orm\Helpers\isValidValue;
 
 abstract class CollectionEntity extends SingleEntity
 {
@@ -31,9 +32,19 @@ abstract class CollectionEntity extends SingleEntity
 
     public function set(string $propertyName, $value): void
     {
-        if (property_exists($this, $propertyName)) {
-            $this->$propertyName = $value;
+        if (!property_exists($this, $propertyName)) {
+            throw new \InvalidArgumentException("Property '{$propertyName}' does not exist.");
         }
+
+		$sanitizedValue = getSanitizeValue($this, $propertyName, $value);
+
+        $isValid = isValidValue($this, $propertyName, $sanitizedValue);
+
+        if (!$isValid) {
+            throw new \Exception(sprintf('Value "%s" is not a valid value for the "%s" property.', $value, $propertyName), 400);
+        }
+
+        $this->$propertyName = $sanitizedValue;
     }
 
     public function getModifiedProperties(): array

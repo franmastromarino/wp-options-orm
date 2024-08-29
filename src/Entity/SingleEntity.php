@@ -35,9 +35,19 @@ abstract class SingleEntity implements EntityInterface
 
     public function set(string $propertyName, $value): void
     {
-        if (property_exists($this, $propertyName)) {
-            $this->$propertyName = $value;
+        if (!property_exists($this, $propertyName)) {
+            throw new \InvalidArgumentException("Property '{$propertyName}' does not exist.");
         }
+
+		$sanitizedValue = getSanitizeValue($this, $propertyName, $value);
+
+        $isValid = isValidValue($this, $propertyName, $sanitizedValue);
+
+        if (!$isValid) {
+            throw new \Exception(sprintf('Value "%s" is not a valid value for the "%s" property.', $value, $propertyName), 400);
+        }
+
+        $this->$propertyName = $sanitizedValue;
     }
 
     public function __get(string $propertyName)
@@ -56,15 +66,7 @@ abstract class SingleEntity implements EntityInterface
             throw new \InvalidArgumentException("Property '{$propertyName}' does not exist.");
         }
 
-        $sanitizedValue = getSanitizeValue($this, $propertyName, $value);
-
-        $isValid = isValidValue($this, $propertyName, $sanitizedValue);
-
-        if (!$isValid) {
-            throw new \Exception(sprintf('Value "%s" is not a valid value for the "%s" property.', $value, $propertyName), 400);
-        }
-
-        $this->$propertyName = $sanitizedValue;
+        $this->$propertyName = $value;
     }
 
     public function __call($name, $arguments)
