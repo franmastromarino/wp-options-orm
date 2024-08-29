@@ -1,0 +1,63 @@
+<?php
+
+namespace QuadLayers\WP_Orm\Repository;
+
+use QuadLayers\WP_Orm\Entity\EntityInterface;
+use QuadLayers\WP_Orm\Mapper\SingleMapperInterface;
+
+class SingleVirtualRepository implements SingleRepositoryInterface
+{
+    /**
+     * @var SingleMapperInterface
+     */
+    private $mapper;
+
+    /**
+     * @var EntityInterface|null
+     */
+    private $cache = null;
+
+    public function __construct(SingleMapperInterface $mapper)
+    {
+        $this->mapper = $mapper;
+    }
+
+    public function find(): ?EntityInterface
+    {
+        if ($this->cache !== null) {
+            return $this->cache;
+        }
+
+        return $this->cache;
+    }
+
+    public function save(EntityInterface $entity): bool
+    {
+        $this->cache = $entity;
+        return true;
+    }
+
+    public function update(array $data): bool
+    {
+        $entity = $this->find();
+        if ($entity === null) {
+            return false; // or throw an exception, as you prefer
+        }
+        // merge old and new data
+        $updatedData = array_merge($entity->getProperties(), $data);
+        $updatedEntity = $this->mapper->toEntity($updatedData);
+        return $this->save($updatedEntity);
+    }
+
+    public function delete(): bool
+    {
+        $this->cache = null;
+        return true;
+    }
+
+    public function create(array $data): bool
+    {
+        $entity = $this->mapper->toEntity($data);
+        return $this->save($entity);
+    }
+}
