@@ -19,7 +19,6 @@ class SingleRepositoryBuilderTest extends TestCase
     {
 
         $this->table = 'settings';
-        // $entity = new SingleEntity();
 
         $this->testDefaults = [
             'key1' => 'default_value_1',

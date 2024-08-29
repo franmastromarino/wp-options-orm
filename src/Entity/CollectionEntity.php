@@ -3,10 +3,11 @@
 namespace QuadLayers\WP_Orm\Entity;
 
 use function QuadLayers\WP_Orm\Helpers\arrayRecursiveDiff;
+use function QuadLayers\WP_Orm\Helpers\getSanitizeValue;
 
 abstract class CollectionEntity extends SingleEntity
 {
-    const PRIVATE_PROPERTIES = ['primaryKey','allowDelete', 'allowUpdate'];
+    const PRIVATE_PROPERTIES = ['primaryKey','allowDelete', 'allowUpdate', 'sanitizeProperties', 'validateProperties'];
 
     /**
      * @var string
@@ -21,17 +22,17 @@ abstract class CollectionEntity extends SingleEntity
      */
     private $allowUpdate = true;
 
-    public function get(string $key)
+    public function get(string $propertyName)
     {
-        if (property_exists($this, $key)) {
-            return $this->$key;
+        if (property_exists($this, $propertyName)) {
+            return $this->$propertyName;
         }
     }
 
-    public function set(string $key, $value): void
+    public function set(string $propertyName, $value): void
     {
-        if (property_exists($this, $key)) {
-            $this->$key = $value;
+        if (property_exists($this, $propertyName)) {
+            $this->$propertyName = $value;
         }
     }
 
