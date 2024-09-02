@@ -32,9 +32,9 @@ class SingleVirtualRepository implements SingleVirtualRepositoryInterface
         $entity = $this->cache;
 
         if ($entity === null) {
-            return false; // or throw an exception, as you prefer
+            return false; // Or throw an exception, as you prefer
         }
-        // merge old and new data
+        // Merge old and new data
         $updatedData = array_merge($entity->getProperties(), $data);
         $updatedEntity = $this->mapper->toEntity($updatedData);
         return $this->save($updatedEntity);

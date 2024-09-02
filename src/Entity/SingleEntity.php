@@ -2,10 +2,10 @@
 
 namespace QuadLayers\WP_Orm\Entity;
 
-use function QuadLayers\WP_Orm\Helpers\arrayRecursiveDiff;
-use function QuadLayers\WP_Orm\Helpers\getObjectVars;
-use function QuadLayers\WP_Orm\Helpers\isValidValue;
-use function QuadLayers\WP_Orm\Helpers\getSanitizeValue;
+use function QuadLayers\WP_Orm\V2\Helpers\arrayRecursiveDiff;
+use function QuadLayers\WP_Orm\V2\Helpers\getObjectVars;
+use function QuadLayers\WP_Orm\V2\Helpers\isValidValue;
+use function QuadLayers\WP_Orm\V2\Helpers\getSanitizeValue;
 
 abstract class SingleEntity implements EntityInterface
 {
@@ -39,7 +39,7 @@ abstract class SingleEntity implements EntityInterface
             throw new \InvalidArgumentException("Property '{$propertyName}' does not exist.");
         }
 
-		$sanitizedValue = getSanitizeValue($this, $propertyName, $value);
+        $sanitizedValue = getSanitizeValue($this, $propertyName, $value);
 
         $isValid = isValidValue($this, $propertyName, $sanitizedValue);
 

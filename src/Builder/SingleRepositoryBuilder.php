@@ -23,7 +23,7 @@ class SingleRepositoryBuilder
         $this->table = $table;
         return $this;
     }
-    
+
     public function setEntity(string $entityClass): self
     {
         if (!class_exists($entityClass)) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace QuadLayers\WP_Orm\Helpers;
+namespace QuadLayers\WP_Orm\V2\Helpers;
 
 use QuadLayers\WP_Orm\Entity\EntityInterface;
 
@@ -16,7 +16,7 @@ function isAssociativeArray(array $array): bool
  * PHP does not filter out private and protected properties when called from within the same class.
  * So, we've created this function to call get_object_vars outside class scope.
  */
-function getObjectVars($object): array
+function getObjectVars($object)
 {
     $vars = get_object_vars($object);
     if ($vars === false) {
@@ -25,7 +25,7 @@ function getObjectVars($object): array
     return $vars;
 }
 
-function getObjectSchema(array $properties): array
+function getObjectSchema($properties): array
 {
     // Initialize the defaults array
     $schema = [];
@@ -56,7 +56,7 @@ function getObjectSchema(array $properties): array
  *
  * @return array The differences between the two arrays.
  */
-function arrayRecursiveDiff(array $array1, array $array2): array
+function arrayRecursiveDiff($array1, $array2)
 {
     $result = [];
 
@@ -88,7 +88,7 @@ function arrayRecursiveDiff(array $array1, array $array2): array
     return $result;
 }
 
-function getSanitizedData(array $data, array $schema, bool $strict = false)
+function getSanitizedData($data, array $schema, bool $strict = false)
 {
     if (is_object($data)) {
         $data = (array)$data;
@@ -194,68 +194,59 @@ function getSanitizedData(array $data, array $schema, bool $strict = false)
     return $sanitized;
 }
 
-function entityValidateProperties(array $data, EntityInterface $entity): void
+function getSanitizeValue(EntityInterface $entity, $propertyName, $value)
 {
-    if (empty($entity->getValidateProperties())) {
-        return;
+    $sanitizeProperties = $entity::$sanitizeProperties;
+
+    if (!isset($sanitizeProperties[$propertyName])) {
+        return $value;
     }
 
-    $entityClass = get_class($entity);
-
-    foreach ($data as $propertyName => $value) {
-        if (isset($entity->getValidateProperties()[$propertyName])) {
-            $validateFunction = $entity->getValidateProperties()[$propertyName];
-            if (is_callable($validateFunction)) {
-                $validation = call_user_func($validateFunction, $value);
-                if (! $validation) {
-                    throw new \Exception(sprintf('Input field %s is invalid', $propertyName), 400);
-                }
-            } elseif (is_string($validateFunction) && strpos($validateFunction, 'self::') === 0) {
-                $validateFunction = [$entityClass, substr($validateFunction, 6)];
-                $validation = call_user_func($validateFunction, $value);
-                if (! $validation) {
-                    throw new \Exception(sprintf('Input field %s is invalid', $propertyName), 400);
-                }
-            } elseif (is_string($validateFunction) && strpos($validateFunction, '$this->') === 0) {
-                $validateFunction = [$entity, substr($validateFunction, 7)];
-                $validation = call_user_func($validateFunction, $value);
-                if (! $validation) {
-                    throw new \Exception(sprintf('Input field %s is invalid', $propertyName), 400);
-                }
-            }
-        }
-    }
+    return invokeMethod($sanitizeProperties[$propertyName], $value, $entity);
 }
 
-function getEntitySanitizedData(array $data, EntityInterface $entity): array
+function isValidValue(EntityInterface $entity, $propertyName, $value): bool
 {
+    $validateProperties = $entity::$validateProperties;
 
-    if (empty($entity->getSanitizeProperties())) {
-        return $data;
+    if (empty($validateProperties) || !isset($validateProperties[$propertyName])) {
+        return true;
     }
 
-    $entitySanitizedData = [];
-    $entityClass = get_class($entity);
+    return invokeMethod($validateProperties[$propertyName], $value, $entity);
+}
 
-    foreach ($data as $propertyName => $value) {
-        if (isset($entity->getSanitizeProperties()[$propertyName])) {
-            $sanitizeFunction = $entity->getSanitizeProperties()[$propertyName];
-            if (is_callable($sanitizeFunction)) {
-                $entitySanitizedData[$propertyName] = call_user_func($sanitizeFunction, $value);
-            } elseif (is_string($sanitizeFunction) && strpos($sanitizeFunction, 'self::') === 0) {
-                $sanitizeFunction = [$entityClass, substr($sanitizeFunction, 6)];
-                $entitySanitizedData[$propertyName] = call_user_func($sanitizeFunction, $value);
-            } elseif (is_string($sanitizeFunction) && strpos($sanitizeFunction, '$this->') === 0) {
-                $sanitizeFunction = [$entity, substr($sanitizeFunction, 7)];
-                $entitySanitizedData[$propertyName] = call_user_func($sanitizeFunction, $value);
+function invokeMethod($method, $value, $context = null)
+{
+    static $methodCache = [];
+
+    $contextClass = is_object($context) ? get_class($context) : 'global';
+    $cacheKey = is_string($method) ? $method . '@' . $contextClass : json_encode($method);
+
+    if (!isset($methodCache[$cacheKey])) {
+        if (is_string($method)) {
+            if (strpos($method, 'self::') === 0 && $contextClass !== 'global') {
+                $method = [$contextClass, substr($method, 6)];
+            } elseif (strpos($method, '$this->') === 0 && $context) {
+                $method = [$context, substr($method, 7)];
+            } elseif (strpos($method, '::') !== false) {
+                $parts = explode('::', $method);
+                if (class_exists($parts[0])) {
+                    $method = $parts;
+                }
+            } else if (function_exists($method)) {
+                $method = $method;
             } else {
-                $entitySanitizedData[$propertyName] = $value; // fallback
+                throw new \InvalidArgumentException("Unknown function or method reference: $method");
             }
-        } else {
-            $dataValue = array($propertyName => $value);
-            $defaultValue = array($propertyName => $value);
-            $entitySanitizedData[$propertyName] = getSanitizedData($dataValue, getObjectSchema($defaultValue))[$propertyName];
         }
+
+        if (!is_callable($method)) {
+            throw new \InvalidArgumentException("Method $cacheKey is not callable.");
+        }
+
+        $methodCache[$cacheKey] = $method;
     }
-    return $entitySanitizedData;
+
+    return call_user_func($methodCache[$cacheKey], $value);
 }

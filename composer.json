@@ -32,7 +32,7 @@
 			"QuadLayers\\WP_Orm\\": "src/"
 		},
 		"files": [
-			"src/helpers.php"
+			"src/V2/helpers.php"
 		]
 	},
 	"autoload-dev": {
@@ -61,8 +61,8 @@
 		"test-single": "./vendor/bin/phpunit --testsuite single",
 		"start": "composer install && composer dump-autoload",
 		"build": "composer install --no-dev && composer dump-autoload -o --no-dev",
-		"phpcs:report:csv": "./vendor/bin/phpcs --warning-severity=0 --extensions=php --report=csv --report-file=./phpcs_error.csv ./src",
-		"phpcs:report:txt": "./vendor/bin/phpcs --warning-severity=0 --extensions=php --report-file=./phpcs_error.txt ./src",
-		"phpcs:report:autofix": "./vendor/bin/phpcbf ./src"
+		"report": "./vendor/bin/phpcs --warning-severity=0 --extensions=php --report-file=./phpcs_error.txt ./src",
+		"report:csv": "./vendor/bin/phpcs --warning-severity=0 --extensions=php --report=csv --report-file=./phpcs_error.csv ./src",
+		"format": "./vendor/bin/phpcbf ./src"
 	}
 }

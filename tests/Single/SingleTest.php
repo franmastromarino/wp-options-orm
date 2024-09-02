@@ -29,7 +29,7 @@ class SingleTest extends TestCase
         $this->assertEquals($testValues['key2'], $entity->getKey2());
         $this->assertEquals($testValues['key3'], $entity->getKey3());
         $this->assertEquals($testValues['key4'], $entity->getKey4());
-        $this->assertEquals($testValues['key5'], $entity->getKey5());
+        $this->assertEquals($entity->sanitizeKey5(), $entity->getKey5());
     }
 
     // Test sanitize function

@@ -1,6 +1,6 @@
 <?php
 
-namespace QuadLayers\WP_Orm\Helpers;
+namespace QuadLayers\WP_Orm\V2\Helpers;
 
 use QuadLayers\WP_Orm\Entity\EntityInterface;
 
@@ -250,36 +250,3 @@ function invokeMethod($method, $value, $context = null)
 
     return call_user_func($methodCache[$cacheKey], $value);
 }
-
-// function invokeMethod($method, $value, $context = null) {
-//     static $methodCache = [];
-
-//     // Generate a unique cache key based on the method and context type
-//     $contextClass = is_object($context) ? get_class($context) : null;
-//     $cacheKey = is_string($method) ? $method : json_encode($method) . ($contextClass ? ':' . $contextClass : '');
-
-//     // Check and cache the method reference
-//     if (!isset($methodCache[$cacheKey])) {
-//         if (is_string($method)) {
-//             if (strpos($method, 'self::') === 0 && $contextClass) {
-//                 $method = [$contextClass, substr($method, 6)];
-//             } elseif (strpos($method, '$this->') === 0 && $context) {
-//                 $method = [$context, substr($method, 7)];
-//             } elseif (!function_exists($method) && strpos($method, '::') !== false) {
-//                 // Assume it is a static method if containing '::' and not a known function
-//                 $method = explode('::', $method);
-//             }
-//             // If it's a single word string, it could be a PHP function or a simple callable
-//             // No modification needed, directly test if callable below
-//         }
-
-//         // Verify if the normalized method is callable
-//         if (!is_callable($method)) {
-//             throw new \InvalidArgumentException("Method $cacheKey is not callable.");
-//         }
-
-//         $methodCache[$cacheKey] = $method;
-//     }
-
-//     return call_user_func($methodCache[$cacheKey], $value, $context);
-// }

@@ -4,8 +4,8 @@ namespace QuadLayers\WP_Orm\Factory;
 
 use QuadLayers\WP_Orm\Entity\EntityInterface;
 
-use function QuadLayers\WP_Orm\Helpers\getObjectSchema;
-use function QuadLayers\WP_Orm\Helpers\getSanitizedData;
+use function QuadLayers\WP_Orm\V2\Helpers\getObjectSchema;
+use function QuadLayers\WP_Orm\V2\Helpers\getSanitizedData;
 
 abstract class AbstractFactory
 {
