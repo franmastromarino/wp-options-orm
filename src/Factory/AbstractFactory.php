@@ -4,8 +4,8 @@ namespace QuadLayers\WP_Orm\Factory;
 
 use QuadLayers\WP_Orm\Entity\EntityInterface;
 
-use function QuadLayers\WP_Orm\Helpers\getObjectSchema;
-use function QuadLayers\WP_Orm\Helpers\getSanitizedData;
+use function QuadLayers\WP_Orm\V2\Helpers\getObjectSchema;
+use function QuadLayers\WP_Orm\V2\Helpers\getSanitizedData;
 
 abstract class AbstractFactory
 {
@@ -31,8 +31,11 @@ abstract class AbstractFactory
 
         $sanitizedData = getSanitizedData($data, $entitySchema);
 
-        // Use reflection to get the properties of the class
-        $entityReflection = new \ReflectionClass($entity);
+        // Loop through each data item
+        foreach ($sanitizedData as $propertyName => $value) {
+            // Set the value of the property
+            $entity->set($propertyName, $value);
+        }
 
         // Get private properties of the entity
         $entityPrivates = $entity::PRIVATE_PROPERTIES;
@@ -45,17 +48,6 @@ abstract class AbstractFactory
                     // Set the value of the property
                     $entity->set($propertyName, $data[$propertyName]);
                 }
-            }
-        }
-
-        // Loop through each data item
-        foreach ($sanitizedData as $property => $value) {
-            $valueType = gettype($value);
-            $propertyType = gettype($entity->$property);
-            // Check if the entity has the property and if the value is of the same type
-            if ($entityReflection->hasProperty($property) && $valueType === $propertyType) {
-                // Set the value of the property
-                $entity->$property = $value;
             }
         }
 

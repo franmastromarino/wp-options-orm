@@ -4,25 +4,14 @@ namespace QuadLayers\WP_Orm\Builder;
 
 use QuadLayers\WP_Orm\Factory\SingleFactory;
 use QuadLayers\WP_Orm\Mapper\SingleMapper;
-use QuadLayers\WP_Orm\Repository\SingleRepository;
+use QuadLayers\WP_Orm\Repository\SingleVirtualRepository;
 
-class SingleRepositoryBuilder
+class SingleVirtualRepositoryBuilder
 {
     /**
      * @var string
      */
-    private $table;
-
-    /**
-     * @var string
-     */
     private $entityClass;
-
-    public function setTable(string $table): self
-    {
-        $this->table = $table;
-        return $this;
-    }
 
     public function setEntity(string $entityClass): self
     {
@@ -34,10 +23,10 @@ class SingleRepositoryBuilder
         return $this;
     }
 
-    public function getRepository(): SingleRepository
+    public function getRepository(): SingleVirtualRepository
     {
         $factory = new SingleFactory($this->entityClass);
         $mapper = new SingleMapper($factory);
-        return new SingleRepository($mapper, $this->table);
+        return new SingleVirtualRepository($mapper);
     }
 }

@@ -2,8 +2,10 @@
 
 namespace QuadLayers\WP_Orm\Entity;
 
-use function QuadLayers\WP_Orm\Helpers\arrayRecursiveDiff;
-use function QuadLayers\WP_Orm\Helpers\getObjectVars;
+use function QuadLayers\WP_Orm\V2\Helpers\arrayRecursiveDiff;
+use function QuadLayers\WP_Orm\V2\Helpers\getObjectVars;
+use function QuadLayers\WP_Orm\V2\Helpers\isValidValue;
+use function QuadLayers\WP_Orm\V2\Helpers\getSanitizeValue;
 
 abstract class SingleEntity implements EntityInterface
 {
@@ -12,38 +14,59 @@ abstract class SingleEntity implements EntityInterface
     /**
      * @var array|null
      */
+    public static $sanitizeProperties = null;
+
+    /**
+     * @var array|null
+     */
+    public static $validateProperties = null;
+
+    /**
+     * @var array|null
+     */
     private $defaults = null;
 
-    public function get(string $key)
+    public function get(string $propertyName)
     {
-        if (property_exists($this, $key)) {
-            return $this->$key;
+        if (property_exists($this, $propertyName)) {
+            return $this->$propertyName;
         }
     }
 
-    public function set(string $key, $value): void
+    public function set(string $propertyName, $value): void
     {
-        if (property_exists($this, $key)) {
-            $this->$key = $value;
+        if (!property_exists($this, $propertyName)) {
+            throw new \InvalidArgumentException("Property '{$propertyName}' does not exist.");
         }
+
+        $sanitizedValue = getSanitizeValue($this, $propertyName, $value);
+
+        $isValid = isValidValue($this, $propertyName, $sanitizedValue);
+
+        if (!$isValid) {
+            throw new \Exception(sprintf('Value "%s" is not a valid value for the "%s" property.', $value, $propertyName), 400);
+        }
+
+        $this->$propertyName = $sanitizedValue;
     }
 
-    public function __get(string $key)
+    public function __get(string $propertyName)
     {
-        if (property_exists($this, $key)) {
-            return $this->$key;
+        if (!property_exists($this, $propertyName)) {
+            throw new \InvalidArgumentException("Property '{$propertyName}' does not exist.");
         }
 
-        throw new \InvalidArgumentException("Property '{$key}' does not exist.");
+        return $this->$propertyName;
     }
 
-    public function __set(string $key, $value): void
+    public function __set(string $propertyName, $value): void
     {
-        if (property_exists($this, $key)) {
-            $this->$key = $value;
-        } else {
-            throw new \InvalidArgumentException("Property '{$key}' does not exist.");
+
+        if (!property_exists($this, $propertyName)) {
+            throw new \InvalidArgumentException("Property '{$propertyName}' does not exist.");
         }
+
+        $this->$propertyName = $value;
     }
 
     public function __call($name, $arguments)

@@ -2,11 +2,13 @@
 
 namespace QuadLayers\WP_Orm\Entity;
 
-use function QuadLayers\WP_Orm\Helpers\arrayRecursiveDiff;
+use function QuadLayers\WP_Orm\V2\Helpers\arrayRecursiveDiff;
+use function QuadLayers\WP_Orm\V2\Helpers\getSanitizeValue;
+use function QuadLayers\WP_Orm\V2\Helpers\isValidValue;
 
 abstract class CollectionEntity extends SingleEntity
 {
-    const PRIVATE_PROPERTIES = ['primaryKey','allowDelete', 'allowUpdate'];
+    const PRIVATE_PROPERTIES = ['primaryKey','allowDelete', 'allowUpdate', 'sanitizeProperties', 'validateProperties'];
 
     /**
      * @var string
@@ -21,18 +23,28 @@ abstract class CollectionEntity extends SingleEntity
      */
     private $allowUpdate = true;
 
-    public function get(string $key)
+    public function get(string $propertyName)
     {
-        if (property_exists($this, $key)) {
-            return $this->$key;
+        if (property_exists($this, $propertyName)) {
+            return $this->$propertyName;
         }
     }
 
-    public function set(string $key, $value): void
+    public function set(string $propertyName, $value): void
     {
-        if (property_exists($this, $key)) {
-            $this->$key = $value;
+        if (!property_exists($this, $propertyName)) {
+            throw new \InvalidArgumentException("Property '{$propertyName}' does not exist.");
         }
+
+        $sanitizedValue = getSanitizeValue($this, $propertyName, $value);
+
+        $isValid = isValidValue($this, $propertyName, $sanitizedValue);
+
+        if (!$isValid) {
+            throw new \Exception(sprintf('Value "%s" is not a valid value for the "%s" property.', $value, $propertyName), 400);
+        }
+
+        $this->$propertyName = $sanitizedValue;
     }
 
     public function getModifiedProperties(): array

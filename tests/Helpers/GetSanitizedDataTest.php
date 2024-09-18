@@ -1,10 +1,10 @@
 <?php
 
-namespace QuadLayers\WP_Orm\Tests\Helpers;
+namespace QuadLayers\WP_Orm\Tests\V2\Helpers;
 
 use PHPUnit\Framework\TestCase;
 
-use function QuadLayers\WP_Orm\Helpers\getSanitizedData;
+use function QuadLayers\WP_Orm\V2\Helpers\getSanitizedData;
 
 class GetSanitizedDataTest extends TestCase
 {

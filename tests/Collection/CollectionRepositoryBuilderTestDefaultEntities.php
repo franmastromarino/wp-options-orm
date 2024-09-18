@@ -18,7 +18,7 @@ class CollectionRepositoryBuilderTestDefaultEntities extends TestCase
 
         // Create default entities
         $this->defaultEntities = [
-            ['id' => 5, 'key1' => 'defaultEntities1'],
+            ['id' => 5, 'key1' => 'defaultEntities1', 'allowDelete' => false],
             ['id' => 6, 'key1' => 'defaultEntities2']
         ];
 
@@ -89,10 +89,13 @@ class CollectionRepositoryBuilderTestDefaultEntities extends TestCase
             // Assuming getProperties() returns an associative array of entity properties
             $properties = $entity->getProperties();
             $expectedProperties = $merged[$index];
-
-            foreach ($expectedProperties as $key => $value) {
-                $this->assertArrayHasKey($key, $properties, "Property $key should exist in the entity");
-                $this->assertEquals($value, $properties[$key], "Property $key should match the expected value");
+            $privateProperties = $entity::PRIVATE_PROPERTIES;
+            foreach ($expectedProperties as $propertyName => $value) {
+                if (in_array($propertyName, $privateProperties)) {
+                    continue;
+                }
+                $this->assertArrayHasKey($propertyName, $properties, "Property $propertyName should exist in the entity");
+                $this->assertEquals($value, $properties[$propertyName], "Property $propertyName should match the expected value");
             }
         }
     }
@@ -100,22 +103,28 @@ class CollectionRepositoryBuilderTestDefaultEntities extends TestCase
     public function testDeleteAll()
     {
         Functions\when('delete_option')->justReturn(true);
+       
         $this->repository->deleteAll();
-        $results = $this->repository->findAll();
-         // Then proceed with count check
-         $this->assertCount(count($this->defaultEntities), $results);
 
-         // Check if the found entities match the default entities properties
-         foreach ($results as $index => $entity) {
-             // Assuming getProperties() returns an associative array of entity properties
-             $properties = $entity->getProperties();
-             $expectedProperties = $this->defaultEntities[$index];
- 
-             foreach ($expectedProperties as $key => $value) {
-                 $this->assertArrayHasKey($key, $properties, "Property $key should exist in the entity");
-                 $this->assertEquals($value, $properties[$key], "Property $key should match the expected value");
-             }
-         }
+        $results = $this->repository->getCache();
+
+        // Then proceed with count check
+        $this->assertEquals(1, count($results));
+
+        // Check if the found entities match the default entities properties
+        foreach ($results as $index => $entity) {
+            // Assuming getProperties() returns an associative array of entity properties
+            $properties = $entity->getProperties();
+            $expectedProperties = $this->defaultEntities[$index];
+            $privateProperties = $entity::PRIVATE_PROPERTIES;
+            foreach ($expectedProperties as $propertyName => $value) {
+                if (in_array($propertyName, $privateProperties)) {
+                    continue;
+                }
+                $this->assertArrayHasKey($propertyName, $properties, "Property $propertyName should exist in the entity");
+                $this->assertEquals($value, $properties[$propertyName], "Property $propertyName should match the expected value");
+            }
+        }
     }
 
     public function testCreate()
@@ -164,6 +173,22 @@ class CollectionRepositoryBuilderTestDefaultEntities extends TestCase
         $this->assertEquals($entity2, $this->repository->find($id + 3));
     }
 
+    public function testAllowDeleteFalse()
+    {
+
+        Functions\when('update_option')->justReturn(true);
+
+        $entity1 = $this->repository->create([]);
+        $entity2 = $this->repository->create([]);
+        $entity3 = $this->repository->create([]);
+       
+        // Expecting an exception when attempting to delete entity 0
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Entity does not allow deletion.');
+
+        $result = $this->repository->delete(5);
+    }
+
     public function testDefaults()
     {
         $entity0 = $this->repository->create([]);
@@ -202,10 +227,13 @@ class CollectionRepositoryBuilderTestDefaultEntities extends TestCase
             // Assuming getProperties() returns an associative array of entity properties
             $properties = $entity->getProperties();
             $expectedProperties = $this->defaultEntities[$index];
-
-            foreach ($expectedProperties as $key => $value) {
-                $this->assertArrayHasKey($key, $properties, "Property $key should exist in the entity");
-                $this->assertEquals($value, $properties[$key], "Property $key should match the expected value");
+            $privateProperties = $entity::PRIVATE_PROPERTIES;
+            foreach ($expectedProperties as $propertyName => $value) {
+                if (in_array($propertyName, $privateProperties)) {
+                    continue;
+                }
+                $this->assertArrayHasKey($propertyName, $properties, "Property $propertyName should exist in the entity");
+                $this->assertEquals($value, $properties[$propertyName], "Property $propertyName should match the expected value");
             }
         }
         
