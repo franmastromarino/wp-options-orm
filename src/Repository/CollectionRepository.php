@@ -37,7 +37,7 @@ class CollectionRepository implements CollectionRepositoryInterface
      */
     private $cache = null;
 
-    public function __construct(CollectionMapperInterface $mapper, string $table, string $primaryKey, bool $autoIncrement, array $defaultEntities = null)
+    public function __construct(CollectionMapperInterface $mapper, string $table, string $primaryKey, bool $autoIncrement, $defaultEntities = null)
     {
         $this->mapper = $mapper;
         $this->table = $table;
